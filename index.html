@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ruben ten Cate — Business Operations @ Adaptyv</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0a0a0c;
+    --coral:#ff5a36;
+    --pink:#ff8fb1;
+    --lime:#c4ff4d;
+    --cream:#f6f1e7;
+    --muted:rgba(246,241,231,.72);
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--cream);
+    font-family:var(--body);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* scroll container with snap */
+  .scroller{
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type:y proximity;
+    scroll-behavior:smooth;
+  }
+  section{
+    position:relative;
+    min-height:100vh;
+    width:100%;
+    scroll-snap-align:start;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+  }
+  /* video / image backgrounds */
+  .bg{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;z-index:0;
+  }
+  .scrim{
+    position:absolute;inset:0;z-index:1;
+    background:
+      linear-gradient(90deg, rgba(10,10,12,.85) 0%, rgba(10,10,12,.45) 45%, rgba(10,10,12,.15) 100%),
+      linear-gradient(0deg, rgba(10,10,12,.7) 0%, rgba(10,10,12,0) 40%);
+  }
+  .scrim.center{
+    background:radial-gradient(ellipse at center, rgba(10,10,12,.35) 0%, rgba(10,10,12,.82) 100%);
+  }
+  .wrap{
+    position:relative;z-index:2;
+    width:min(1100px,90vw);
+    margin:0 auto;
+    padding:clamp(20px,6vh,80px) 0;
+  }
+  /* reveal animation */
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.12s}
+  .reveal.d2{transition-delay:.24s}
+  .reveal.d3{transition-delay:.36s}
+
+  .eyebrow{
+    display:inline-block;
+    font-family:var(--display);
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-size:clamp(11px,1.1vw,14px);
+    color:var(--ink);
+    background:var(--lime);
+    padding:7px 14px;border-radius:999px;
+    margin-bottom:22px;
+  }
+  .chapter-tag{
+    font-family:var(--display);font-weight:700;
+    color:var(--coral);letter-spacing:.05em;
+    font-size:clamp(13px,1.4vw,16px);
+    margin-bottom:16px;text-transform:uppercase;
+  }
+  h1{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(48px,11vw,140px);
+    line-height:.92;
+    letter-spacing:-.02em;
+  }
+  h1 .stroke{
+    -webkit-text-stroke:2px var(--cream);
+    color:transparent;
+  }
+  h2{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(30px,5.2vw,68px);
+    line-height:1.0;
+    letter-spacing:-.015em;
+    max-width:16ch;
+  }
+  .lead{
+    font-size:clamp(17px,2vw,23px);
+    line-height:1.5;color:var(--muted);
+    max-width:48ch;margin-top:22px;
+  }
+  .accent{color:var(--coral)}
+  .accent-pink{color:var(--pink)}
+  .accent-lime{color:var(--lime)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;max-width:46ch}
+  .chip{
+    font-family:var(--display);font-weight:500;
+    font-size:clamp(12px,1.3vw,15px);
+    padding:9px 16px;border-radius:999px;
+    border:1.5px solid rgba(246,241,231,.35);
+    background:rgba(246,241,231,.05);
+    backdrop-filter:blur(4px);
+  }
+  .scroll-cue{
+    position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+    z-index:3;font-family:var(--display);font-weight:500;
+    font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .scroll-cue .dot{width:2px;height:34px;background:linear-gradient(var(--cream),transparent);animation:drop 1.6s infinite}
+  @keyframes drop{0%{opacity:0;transform:translateY(-10px)}40%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
+
+  /* language toggle */
+  .lang{
+    position:fixed;top:22px;right:22px;z-index:50;
+    display:flex;background:rgba(10,10,12,.55);
+    border:1.5px solid rgba(246,241,231,.25);
+    border-radius:999px;padding:4px;backdrop-filter:blur(8px);
+  }
+  .lang button{
+    font-family:var(--display);font-weight:700;font-size:13px;
+    color:var(--muted);background:transparent;border:none;cursor:pointer;
+    padding:7px 14px;border-radius:999px;transition:.25s;
+  }
+  .lang button.active{background:var(--coral);color:var(--ink)}
+
+  /* nav dots */
+  .dots{
+    position:fixed;left:22px;top:50%;transform:translateY(-50%);
+    z-index:40;display:flex;flex-direction:column;gap:14px;
+  }
+  .dots a{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--muted);transition:.25s}
+  .dots a.active{background:var(--lime);border-color:var(--lime);transform:scale(1.25)}
+
+  /* progress bar */
+  .progress{position:fixed;top:0;left:0;height:4px;background:var(--coral);z-index:60;width:0}
+
+  /* fit grid */
+  .fit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:34px}
+  .fit-card{
+    border:1.5px solid rgba(246,241,231,.2);
+    border-radius:18px;padding:22px;
+    background:rgba(246,241,231,.04);
+    transition:.3s;
+  }
+  .fit-card:hover{border-color:var(--coral);transform:translateY(-4px);background:rgba(255,90,54,.08)}
+  .fit-card .their{font-size:14px;color:var(--muted);margin-bottom:8px}
+  .fit-card .mine{font-family:var(--display);font-weight:500;font-size:clamp(16px,1.7vw,19px);line-height:1.25}
+
+  /* contact */
+  .contact-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+  .btn{
+    font-family:var(--display);font-weight:700;font-size:clamp(15px,1.6vw,18px);
+    text-decoration:none;padding:16px 26px;border-radius:14px;
+    display:inline-flex;align-items:center;gap:10px;transition:.25s;
+  }
+  .btn-primary{background:var(--coral);color:var(--ink)}
+  .btn-primary:hover{background:var(--lime);transform:translateY(-3px)}
+  .btn-ghost{border:1.5px solid rgba(246,241,231,.4);color:var(--cream)}
+  .btn-ghost:hover{border-color:var(--lime);color:var(--lime);transform:translateY(-3px)}
+  .meta{margin-top:30px;display:flex;flex-wrap:wrap;gap:8px 28px;color:var(--muted);font-size:15px}
+  .meta b{color:var(--cream);font-weight:600}
+  .madeby{margin-top:46px;font-family:var(--display);font-size:clamp(14px,1.5vw,17px);color:var(--lime);font-weight:500}
+  .placeholder{color:var(--pink);font-style:italic;font-size:13px}
+
+  @media (max-width:640px){
+    .dots{display:none}
+    .scrim{background:linear-gradient(0deg, rgba(10,10,12,.88) 0%, rgba(10,10,12,.35) 70%)}
+    .lead{max-width:90vw}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="lang" role="group" aria-label="Language">
+  <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+  <button id="btn-fr" onclick="setLang('fr')">FR</button>
+</div>
+
+<nav class="dots" aria-hidden="true">
+  <a href="#s0" data-dot="0" class="active"></a>
+  <a href="#s1" data-dot="1"></a>
+  <a href="#s2" data-dot="2"></a>
+  <a href="#s3" data-dot="3"></a>
+  <a href="#s4" data-dot="4"></a>
+  <a href="#s5" data-dot="5"></a>
+</nav>
+
+<div class="scroller" id="scroller">
+
+  <!-- HERO -->
+  <section id="s0">
+    <img class="bg" src="images/4.jpeg" alt="" />
+    <div class="scrim"></div>
+    <div class="wrap">
+      <span class="eyebrow reveal in" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span>
+      <h1 class="reveal in d1">Ruben<br><span class="stroke">ten Cate</span></h1>
+      <p class="lead reveal in d2" data-i18n="hero_lead">27. Career-changer in tech. I build tools that actually ship — with AI, not just about it. High agency, low ego.</p>
+    </div>
+    <div class="scroll-cue"><span data-i18n="scroll">Scroll the story</span><span class="dot"></span></div>
+  </section>
+
+  <!-- CHAPTER 1 -->
+  <section id="s1">
+    <video class="bg" src="1.mp4" autoplay muted loop playsinline poster="images/1.png"></video>
+    <div class="scrim"></div>
+    <div class="wrap">
+      <div class="chapter-tag reveal" data-i18n="c1_tag">01 — The reset</div>
+      <h2 class="reveal d1" data-i18n="c1_h">I bet on myself.</h2>
+      <p class="lead reveal d2" data-i18n="c1_body">In my mid-twenties I chose to rebuild from the ground up: a CFC in informatics through the FPA fast-track. Not because it was the easy path — because I want to build the future, and biology + AI is where the most exciting future is being built.</p>
+    </div>
+  </section>
+
+  <!-- CHAPTER 2 -->
+  <section id="s2">
+    <video class="bg" src="2.mp4" autoplay muted loop playsinline poster="images/2.png"></video>
+    <div class="scrim"></div>
+    <div class="wrap">
+      <div class="chapter-tag reveal" data-i18n="c2_tag">02 — The build</div>
+      <h2 class="reveal d1" data-i18n="c2_h">I don't just write emails with AI. I build with it.</h2>
+      <p class="lead reveal d2" data-i18n="c2_body">Claude Code, Python, Notion, no-code — whatever gets the job done. I turn messy, manual, slow workflows into things that quietly run themselves. Organized, reliable, nothing slips through the cracks.</p>
+      <div class="chips reveal d3">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Python</span>
+        <span class="chip">Automation</span>
+        <span class="chip">Notion</span>
+        <span class="chip">No-code</span>
+        <span class="chip" data-i18n="chip_tidy">Tidy &amp; reliable</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 3 -->
+  <section id="s3">
+    <video class="bg" src="3.mp4" autoplay muted loop playsinline poster="images/3.jpeg"></video>
+    <div class="scrim"></div>
+    <div class="wrap">
+      <div class="chapter-tag reveal" data-i18n="c3_tag">03 — The drive</div>
+      <h2 class="reveal d1" data-i18n="c3_h">When I commit, I go all in.</h2>
+      <p class="lead reveal d2" data-i18n="c3_body">For two weeks this July I'll be in Ukraine — to ask the most important question of my life. That's the exact energy I bring to work: spot the problem before anyone asks, take ownership, follow all the way through. And I'm available to start this week.</p>
+    </div>
+  </section>
+
+  <!-- WHY ADAPTYV -->
+  <section id="s4">
+    <img class="bg" src="images/4.jpeg" alt="" />
+    <div class="scrim center"></div>
+    <div class="wrap">
+      <div class="chapter-tag reveal" data-i18n="c4_tag">04 — Why us</div>
+      <h2 class="reveal d1" data-i18n="c4_h">Your wishlist, my default mode.</h2>
+      <div class="fit-grid">
+        <div class="fit-card reveal d1"><div class="their" data-i18n="fit1_t">“Use AI to fix manual workflows”</div><div class="mine" data-i18n="fit1_m">Exactly what I love doing — and already do.</div></div>
+        <div class="fit-card reveal d1"><div class="their" data-i18n="fit2_t">“Hands-on, organized, reliable”</div><div class="mine" data-i18n="fit2_m">I keep things tidy and follow through. Always.</div></div>
+        <div class="fit-card reveal d2"><div class="their" data-i18n="fit3_t">“Entrepreneurial, high agency”</div><div class="mine" data-i18n="fit3_m">I spot problems before anyone has to ask.</div></div>
+        <div class="fit-card reveal d2"><div class="their" data-i18n="fit4_t">“Genuine interest in life sciences”</div><div class="mine" data-i18n="fit4_m">Giving AI agents hands in the real world? I'm in.</div></div>
+        <div class="fit-card reveal d3"><div class="their" data-i18n="fit5_t">“On-site Lausanne, ASAP”</div><div class="mine" data-i18n="fit5_m">Local-ready and available right now.</div></div>
+        <div class="fit-card reveal d3"><div class="their" data-i18n="fit6_t">“Comfortable switching between projects”</div><div class="mine" data-i18n="fit6_m">Generalist by nature. Bring the chaos.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="s5">
+    <img class="bg" src="images/1.png" alt="" />
+    <div class="scrim"></div>
+    <div class="wrap">
+      <span class="eyebrow reveal" data-i18n="cta_eyebrow">Let's build</span>
+      <h2 class="reveal d1" data-i18n="cta_h">Ready when you are.</h2>
+      <div class="contact-row reveal d2">
+        <a class="btn btn-primary" href="mailto:tencaterubenads@gmail.com?subject=Business%20Operations%20Intern%20%E2%80%94%20Ruben%20ten%20Cate"><span data-i18n="cta_email">Email me</span> →</a>
+        <a class="btn btn-ghost" id="cv-link" href="#" data-i18n="cta_cv">Download my CV (PDF)</a>
+      </div>
+      <div class="meta reveal d2">
+        <span><b data-i18n="m_email_l">Email:</b> tencaterubenads@gmail.com</span>
+        <span><b data-i18n="m_loc_l">Location:</b> <span data-i18n="m_loc_v">Lausanne, Switzerland — on-site ready</span></span>
+        <span><b data-i18n="m_avail_l">Availability:</b> <span data-i18n="m_avail_v">This week · away 2 weeks in July</span></span>
+        <span><b data-i18n="m_lang_l">Languages:</b> <span data-i18n="m_lang_v">French &amp; English</span></span>
+        <span class="placeholder">Phone / LinkedIn / GitHub — <span data-i18n="m_ph">tell me and I'll add them</span></span>
+      </div>
+      <p class="madeby reveal d3" data-i18n="madeby">This entire site? Built with AI — by me. Point proven. ✦</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const I18N = {
+  en:{
+    hero_eyebrow:"Application — Business Operations @ Adaptyv",
+    hero_lead:"27. Career-changer in tech. I build tools that actually ship — with AI, not just about it. High agency, low ego.",
+    scroll:"Scroll the story",
+    c1_tag:"01 — The reset",
+    c1_h:"I bet on myself.",
+    c1_body:"In my mid-twenties I chose to rebuild from the ground up: a CFC in informatics through the FPA fast-track. Not because it was the easy path — because I want to build the future, and biology + AI is where the most exciting future is being built.",
+    c2_tag:"02 — The build",
+    c2_h:"I don't just write emails with AI. I build with it.",
+    c2_body:"Claude Code, Python, Notion, no-code — whatever gets the job done. I turn messy, manual, slow workflows into things that quietly run themselves. Organized, reliable, nothing slips through the cracks.",
+    chip_tidy:"Tidy & reliable",
+    c3_tag:"03 — The drive",
+    c3_h:"When I commit, I go all in.",
+    c3_body:"For two weeks this July I'll be in Ukraine — to ask the most important question of my life. That's the exact energy I bring to work: spot the problem before anyone asks, take ownership, follow all the way through. And I'm available to start this week.",
+    c4_tag:"04 — Why us",
+    c4_h:"Your wishlist, my default mode.",
+    fit1_t:"“Use AI to fix manual workflows”", fit1_m:"Exactly what I love doing — and already do.",
+    fit2_t:"“Hands-on, organized, reliable”", fit2_m:"I keep things tidy and follow through. Always.",
+    fit3_t:"“Entrepreneurial, high agency”", fit3_m:"I spot problems before anyone has to ask.",
+    fit4_t:"“Genuine interest in life sciences”", fit4_m:"Giving AI agents hands in the real world? I'm in.",
+    fit5_t:"“On-site Lausanne, ASAP”", fit5_m:"Local-ready and available right now.",
+    fit6_t:"“Comfortable switching between projects”", fit6_m:"Generalist by nature. Bring the chaos.",
+    cta_eyebrow:"Let's build",
+    cta_h:"Ready when you are.",
+    cta_email:"Email me",
+    cta_cv:"Download my CV (PDF)",
+    m_email_l:"Email:", m_loc_l:"Location:", m_loc_v:"Lausanne, Switzerland — on-site ready",
+    m_avail_l:"Availability:", m_avail_v:"This week · away 2 weeks in July",
+    m_lang_l:"Languages:", m_lang_v:"French & English",
+    m_ph:"tell me and I'll add them",
+    madeby:"This entire site? Built with AI — by me. Point proven. ✦"
+  },
+  fr:{
+    hero_eyebrow:"Candidature — Business Operations @ Adaptyv",
+    hero_lead:"27 ans. Reconversion dans la tech. Je construis des outils qui marchent vraiment — avec l'IA, pas seulement à son sujet. Haute autonomie, ego mesuré.",
+    scroll:"Déroulez l'histoire",
+    c1_tag:"01 — Le redémarrage",
+    c1_h:"J'ai parié sur moi.",
+    c1_body:"La vingtaine, j'ai choisi de tout reconstruire : un CFC en informatique via la voie accélérée FPA. Pas parce que c'était le chemin facile — parce que je veux construire le futur, et la biologie + l'IA, c'est là que le futur le plus excitant se construit.",
+    c2_tag:"02 — La construction",
+    c2_h:"Je n'écris pas juste des emails avec l'IA. Je construis avec.",
+    c2_body:"Claude Code, Python, Notion, no-code — ce qui fait avancer le travail. Je transforme les processus manuels, lents et bordéliques en outils qui tournent tout seuls. Organisé, fiable, rien ne passe à la trappe.",
+    chip_tidy:"Carré & fiable",
+    c3_tag:"03 — Le moteur",
+    c3_h:"Quand je m'engage, j'y vais à fond.",
+    c3_body:"Deux semaines en juillet, je serai en Ukraine — pour poser la question la plus importante de ma vie. C'est exactement l'énergie que j'apporte au travail : repérer le problème avant qu'on me le demande, prendre la responsabilité, aller jusqu'au bout. Et je suis disponible dès cette semaine.",
+    c4_tag:"04 — Pourquoi vous",
+    c4_h:"Votre liste de souhaits, mon mode par défaut.",
+    fit1_t:"« Utiliser l'IA pour corriger les workflows manuels »", fit1_m:"Exactement ce que j'adore faire — et fais déjà.",
+    fit2_t:"« Concret, organisé, fiable »", fit2_m:"Je garde tout en ordre et je vais au bout. Toujours.",
+    fit3_t:"« Entrepreneurial, haute autonomie »", fit3_m:"Je repère les problèmes avant qu'on me le demande.",
+    fit4_t:"« Intérêt sincère pour les sciences du vivant »", fit4_m:"Donner des mains aux agents IA dans le monde réel ? J'en suis.",
+    fit5_t:"« Sur site à Lausanne, dès que possible »", fit5_m:"Local et disponible immédiatement.",
+    fit6_t:"« À l'aise pour jongler entre les projets »", fit6_m:"Généraliste de nature. Amenez le chaos.",
+    cta_eyebrow:"Construisons",
+    cta_h:"Prêt quand vous l'êtes.",
+    cta_email:"Écrivez-moi",
+    cta_cv:"Télécharger mon CV (PDF)",
+    m_email_l:"Email :", m_loc_l:"Lieu :", m_loc_v:"Lausanne, Suisse — prêt sur site",
+    m_avail_l:"Disponibilité :", m_avail_v:"Cette semaine · absent 2 semaines en juillet",
+    m_lang_l:"Langues :", m_lang_v:"Français & anglais",
+    m_ph:"dites-le moi et je les ajoute",
+    madeby:"Tout ce site ? Construit avec l'IA — par moi. Démonstration faite. ✦"
+  }
+};
+
+function setLang(lang){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(I18N[lang][k]!==undefined) el.textContent = I18N[lang][k];
+  });
+  document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  document.getElementById('btn-fr').classList.toggle('active',lang==='fr');
+  try{ localStorage.setItem('cvlang',lang); }catch(e){}
+}
+
+// reveal on scroll
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:.18});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// nav dots + progress (within scroller)
+const scroller = document.getElementById('scroller');
+const sections = [...document.querySelectorAll('section')];
+const dots = [...document.querySelectorAll('.dots a')];
+const progress = document.getElementById('progress');
+scroller.addEventListener('scroll',()=>{
+  const top = scroller.scrollTop, vh = scroller.clientHeight;
+  const max = scroller.scrollHeight - vh;
+  progress.style.width = (max>0 ? (top/max*100) : 0) + '%';
+  let idx = Math.round(top/vh);
+  idx = Math.max(0,Math.min(sections.length-1,idx));
+  dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+},{passive:true});
+dots.forEach(d=>d.addEventListener('click',ev=>{
+  ev.preventDefault();
+  const i = +d.getAttribute('data-dot');
+  scroller.scrollTo({top:i*scroller.clientHeight,behavior:'smooth'});
+}));
+
+// init language (default EN, remember choice)
+let start='en';
+try{ start = localStorage.getItem('cvlang') || 'en'; }catch(e){}
+setLang(start);
+</script>
+</body>
+</html>
