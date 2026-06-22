@@ -9,7 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --ink:#0a0a0c; --coral:#ff5a36; --pink:#ff8fb1; --lime:#c4ff4d;
+    --green:#1fdf6b; /* vivid validation green — main accent */
+    --ink:#0a0a0c; --coral:#ff5a36; --pink:#1fdf6b; --lime:#1fdf6b; /* green accent everywhere */
     --cream:#f6f1e7; --muted:rgba(246,241,231,.72);
     --display:'Space Grotesk',sans-serif; --body:'Inter',sans-serif;
   }
@@ -32,9 +33,9 @@
   .scrim.center{background:radial-gradient(ellipse at center, rgba(10,10,12,.35) 0%, rgba(10,10,12,.85) 100%)}
   /* bold gradient panel for the "why us" section (no photo) */
   .gradient-bg{position:absolute;inset:0;z-index:0;
-    background:radial-gradient(120% 120% at 12% 0%, rgba(255,90,54,.22) 0%, rgba(10,10,12,0) 42%),
-               radial-gradient(120% 120% at 100% 100%, rgba(196,255,77,.16) 0%, rgba(10,10,12,0) 45%),
-               linear-gradient(160deg, #14141a 0%, #0a0a0c 60%)}
+    background:radial-gradient(120% 120% at 12% 0%, rgba(255,90,54,.24) 0%, rgba(10,10,12,0) 42%),
+               radial-gradient(120% 120% at 100% 100%, rgba(31,223,107,.16) 0%, rgba(10,10,12,0) 45%),
+               linear-gradient(160deg, #16110e 0%, #0a0a0c 62%)}
   .beat h1,.beat h2,.beat .lead,.hbeat h1,.hbeat .lead{text-shadow:0 2px 24px rgba(0,0,0,.55)}
 
   .wrap{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto;padding:clamp(20px,6vh,80px) 0}
@@ -42,6 +43,16 @@
   /* stacked text layers inside the pinned stage */
   .layers{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto}
   .beat,.hbeat{position:absolute;top:50%;left:0;width:100%;transform:translateY(-50%);opacity:0;will-change:opacity,transform}
+  /* hero badge pinned to the bottom-left of the hero (title stays centered) */
+  .hero-eyebrow-wrap{position:absolute;left:0;right:0;bottom:18vh;z-index:3;width:min(1100px,90vw);margin:0 auto;will-change:opacity}
+  /* staggered entrance for the text inside each beat */
+  .beat > *, .hbeat > *{transition:transform .7s cubic-bezier(.2,.75,.2,1), filter .7s ease;transform:translateY(26px);filter:blur(6px)}
+  .beat.show > *, .hbeat.show > *{transform:translateY(0);filter:blur(0)}
+  .beat.show .chapter-tag, .hbeat.show .eyebrow{transition-delay:.05s}
+  .beat.show h2, .hbeat.show h1{transition-delay:.15s}
+  .beat.show .lead, .hbeat.show .lead{transition-delay:.27s}
+  .beat.show .chips{transition-delay:.40s}
+  .chip{transition:transform .5s cubic-bezier(.2,.75,.2,1), background .25s, border-color .25s}
 
   .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
   .reveal.in{opacity:1;transform:none}
@@ -59,6 +70,10 @@
   .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;max-width:46ch}
   .chip{font-family:var(--display);font-weight:500;font-size:clamp(12px,1.3vw,15px);padding:9px 16px;border-radius:999px;
     border:1.5px solid rgba(246,241,231,.35);background:rgba(246,241,231,.05);backdrop-filter:blur(4px)}
+  .chip-groups{display:flex;flex-direction:column;gap:14px;margin-top:30px}
+  .chip-group{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .chip-label{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--lime);margin-right:6px;min-width:96px}
 
   .scroll-cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:4;font-family:var(--display);
     font-weight:500;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
@@ -76,7 +91,7 @@
   .dots a{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--muted);transition:.25s;cursor:pointer}
   .dots a.active{background:var(--lime);border-color:var(--lime);transform:scale(1.25)}
 
-  .progress{position:fixed;top:0;left:0;height:4px;background:var(--coral);z-index:60;width:0}
+  .progress{position:fixed;top:0;left:0;height:4px;background:var(--green);z-index:60;width:0;box-shadow:0 0 12px rgba(31,223,107,.6)}
 
   .fit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:34px}
   .fit-card{border:1.5px solid rgba(246,241,231,.2);border-radius:18px;padding:22px;background:rgba(246,241,231,.04);transition:.3s}
@@ -99,8 +114,9 @@
   @media (max-width:640px){
     .dots{display:none}
     .story{height:580vh}
-    .scrim{background:linear-gradient(0deg, rgba(10,10,12,.9) 0%, rgba(10,10,12,.4) 70%)}
+    .scrim{background:linear-gradient(0deg, rgba(10,10,12,.92) 0%, rgba(10,10,12,.45) 75%)}
     .lead{max-width:90vw}
+    .hero-eyebrow-wrap{bottom:14vh}
   }
 </style>
 </head>
@@ -131,7 +147,6 @@
     <div class="layers">
       <!-- HERO (idle, looping) -->
       <div class="hbeat" id="herotext">
-        <span class="eyebrow" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span>
         <h1>Ruben<br><span class="stroke">ten Cate</span></h1>
         <p class="lead" data-i18n="hero_lead">27. Career-changer who bet on himself. I build tools that actually ship — with AI, not just about it. High agency, low ego.</p>
       </div>
@@ -147,17 +162,18 @@
       </div>
       <!-- BEAT 1 -->
       <div class="beat" data-beat="1">
-        <div class="chapter-tag" data-i18n="c2_tag">02 — All in</div>
-        <h2 data-i18n="c2_h">When I commit, I go all in.</h2>
-        <p class="lead" data-i18n="c2_body">For two weeks this July I'll be in Ukraine — to ask the most important question of my life. I don't do things halfway. The reset that brought me into tech (a CFC in informatics, FPA fast-track) came from the same place: bet on yourself, then follow through.</p>
+        <div class="chapter-tag" data-i18n="c2_tag">02 — Good to know</div>
+        <h2 data-i18n="c2_h">One honest note on my availability.</h2>
+        <p class="lead" data-i18n="c2_body">For two weeks in July I'll be in Ukraine, on holiday — to propose to my girlfriend. I won't be reachable during that time, and I'd rather tell you upfront. Outside those two weeks, I'm fully available.</p>
       </div>
       <!-- BEAT 2 -->
       <div class="beat" data-beat="2">
-        <div class="chapter-tag" data-i18n="c3_tag">03 — The drive</div>
-        <h2 data-i18n="c3_h">Spot it. Own it. Ship it.</h2>
-        <p class="lead" data-i18n="c3_body">That's the exact energy I bring to work: see the problem before anyone asks, take ownership, push it all the way through. High agency, calm under chaos. And I'm available to start this week.</p>
+        <div class="chapter-tag" data-i18n="c3_tag">03 — Ready now</div>
+        <h2 data-i18n="c3_h">Adaptable, motivated, ready to start.</h2>
+        <p class="lead" data-i18n="c3_body">I adjust quickly and bring real motivation. I can start immediately — available full-time from 22 June to 16 August (apart from those two weeks in July). And Lausanne is right next door, in Morges.</p>
       </div>
     </div>
+    <div class="hero-eyebrow-wrap" id="heroEyebrowWrap"><span class="eyebrow" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span></div>
     <div class="scroll-cue" id="cue"><span data-i18n="scroll">Scroll the story</span><span class="dot"></span></div>
   </div>
 </section>
@@ -187,15 +203,28 @@
     <span class="eyebrow reveal" data-i18n="cta_eyebrow">Let's build</span>
     <h2 class="reveal d1" data-i18n="cta_h">Ready when you are.</h2>
     <div class="contact-row reveal d2">
-      <a class="btn btn-primary" href="mailto:tencaterubenads@gmail.com?subject=Business%20Operations%20Intern%20%E2%80%94%20Ruben%20ten%20Cate"><span data-i18n="cta_email">Email me</span> →</a>
+      <a class="btn btn-primary" href="mailto:tencateruben@gmail.com?subject=Business%20Operations%20Intern%20%E2%80%94%20Ruben%20ten%20Cate"><span data-i18n="cta_email">Email me</span> →</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/ruben-ten-cate/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn btn-ghost" href="https://github.com/Ruben-ten-Cate" target="_blank" rel="noopener">GitHub ↗</a>
       <a class="btn btn-ghost" id="cv-link" href="#" data-i18n="cta_cv">Download my CV (PDF)</a>
     </div>
     <div class="meta reveal d2">
-      <span><b data-i18n="m_email_l">Email:</b> tencaterubenads@gmail.com</span>
-      <span><b data-i18n="m_loc_l">Location:</b> <span data-i18n="m_loc_v">Lausanne, Switzerland — on-site ready</span></span>
+      <span><b data-i18n="m_email_l">Email:</b> <a href="mailto:tencateruben@gmail.com" style="color:inherit">tencateruben@gmail.com</a></span>
+      <span><b data-i18n="m_phone_l">Phone:</b> <a href="tel:+41786850210" style="color:inherit">+41 78 685 02 10</a></span>
+      <span><b data-i18n="m_loc_l">Location:</b> <span data-i18n="m_loc_v">Morges, Switzerland (next to Lausanne) — on-site ready</span></span>
       <span><b data-i18n="m_avail_l">Availability:</b> <span data-i18n="m_avail_v">This week · away 2 weeks in July</span></span>
-      <span><b data-i18n="m_lang_l">Languages:</b> <span data-i18n="m_lang_v">French &amp; English</span></span>
-      <span class="placeholder">Phone / LinkedIn / GitHub — <span data-i18n="m_ph">tell me and I'll add them</span></span>
+    </div>
+    <div class="chip-groups reveal d3">
+      <div class="chip-group">
+        <span class="chip-label" data-i18n="lang_label">Languages</span>
+        <span class="chip">Français</span><span class="chip">English</span><span class="chip">Nederlands</span><span class="chip">Deutsch</span><span class="chip">Español</span>
+      </div>
+      <div class="chip-group">
+        <span class="chip-label" data-i18n="edu_label">Education</span>
+        <span class="chip" data-i18n="edu1">IT Technician — CFC (in progress)</span>
+        <span class="chip" data-i18n="edu2">Bachelor in Theology</span>
+        <span class="chip" data-i18n="edu3">Bilingual Baccalaureate FR/DE — Biology &amp; Chemistry focus</span>
+      </div>
     </div>
     <p class="madeby reveal d3" data-i18n="madeby">This entire site? Built with AI — by me. Point proven. ✦</p>
   </div>
@@ -205,55 +234,59 @@
 const I18N = {
   en:{
     hero_eyebrow:"Application — Business Operations @ Adaptyv",
-    hero_lead:"27, fluent in 5 languages. Career-changer who bet on himself — I build tools that actually ship with AI, not just talk about it. High agency, low ego.",
+    hero_lead:"27, fluent in 5 languages. A career-changer who bet on himself — I build practical tools with AI and like to get things done. Self-directed, low ego.",
     scroll:"Scroll the story",
-    c1_tag:"01 — The build", c1_h:"I don't just write emails with AI. I build with it.",
-    c1_body:"Claude Code, Python, Notion, no-code — whatever gets the job done. I turn messy, manual, slow workflows into things that quietly run themselves. Organized, reliable, nothing slips through the cracks.",
+    c1_tag:"01 — The build", c1_h:"I use AI to build real tools, not just to draft emails.",
+    c1_body:"Claude Code, Python, Notion, no-code — whatever gets the job done. I turn manual, slow workflows into things that quietly run themselves. Organized, reliable, and careful with the details.",
     chip_tidy:"Tidy & reliable",
-    c2_tag:"02 — All in", c2_h:"When I commit, I go all in.",
-    c2_body:"For two weeks this July I'll be in Ukraine — to ask the most important question of my life. I don't do things halfway. The reset that brought me into tech (a CFC in informatics, FPA fast-track) came from the same place: bet on yourself, then follow through.",
-    c3_tag:"03 — The drive", c3_h:"Spot it. Own it. Ship it.",
-    c3_body:"That's the exact energy I bring to work: see the problem before anyone asks, take ownership, push it all the way through. High agency, calm under chaos. And I'm available to start this week.",
-    c4_tag:"04 — Why us", c4_h:"Your wishlist, my default mode.",
-    fit1_t:"“Use AI to fix manual workflows”", fit1_m:"Exactly what I love doing — and already do.",
-    fit2_t:"“Hands-on, organized, reliable”", fit2_m:"I keep things tidy and follow through. Always.",
-    fit3_t:"“Entrepreneurial, high agency”", fit3_m:"I spot problems before anyone has to ask.",
-    fit4_t:"“Genuine interest in life sciences”", fit4_m:"Giving AI agents hands in the real world? I'm in.",
-    fit5_t:"“On-site Lausanne, ASAP”", fit5_m:"Local-ready and available right now.",
-    fit6_t:"“Comfortable switching between projects”", fit6_m:"Generalist by nature. Bring the chaos.",
+    c2_tag:"02 — Good to know", c2_h:"One honest note on my availability.",
+    c2_body:"For two weeks in July I'll be in Ukraine, on holiday — to propose to my girlfriend. I won't be reachable during that time, and I'd rather tell you upfront. Outside those two weeks, I'm fully available.",
+    c3_tag:"03 — Ready now", c3_h:"Adaptable, motivated, ready to start.",
+    c3_body:"I adjust quickly and bring real motivation. I can start immediately — available full-time from 22 June to 16 August (apart from those two weeks in July). And Lausanne is right next door, in Morges.",
+    c4_tag:"04 — Why us", c4_h:"What you're looking for is how I already work.",
+    fit1_t:"“Use AI to fix manual workflows”", fit1_m:"Exactly what I enjoy doing — and already do.",
+    fit2_t:"“Hands-on, organized, reliable”", fit2_m:"I keep things tidy and follow through.",
+    fit3_t:"“Entrepreneurial, high agency”", fit3_m:"I tend to spot problems early and act on them.",
+    fit4_t:"“Genuine interest in life sciences”", fit4_m:"Giving AI agents hands in the real world genuinely excites me.",
+    fit5_t:"“On-site Lausanne, ASAP”", fit5_m:"Based in Morges, available right now.",
+    fit6_t:"“Comfortable switching between projects”", fit6_m:"Generalist by nature — at ease when priorities shift.",
     cta_eyebrow:"Let's build", cta_h:"Ready when you are.",
     cta_email:"Email me", cta_cv:"Download my CV (PDF)",
-    m_email_l:"Email:", m_loc_l:"Location:", m_loc_v:"Lausanne, Switzerland — on-site ready",
-    m_avail_l:"Availability:", m_avail_v:"This week · away 2 weeks in July",
+    m_email_l:"Email:", m_phone_l:"Phone:", m_loc_l:"Location:", m_loc_v:"Morges, Switzerland (next to Lausanne) — on-site ready",
+    m_avail_l:"Availability:", m_avail_v:"Full-time, 22 Jun – 16 Aug · away ~2 weeks in July (Ukraine)",
     m_lang_l:"Languages:", m_lang_v:"French, English, Dutch, German & Spanish (fluent)",
     m_ph:"tell me and I'll add them",
-    madeby:"This entire site? Built with AI — by me. Point proven. ✦"
+    lang_label:"Languages", edu_label:"Education",
+    edu1:"IT Technician — CFC (in progress)", edu2:"Bachelor in Theology", edu3:"Bilingual Baccalaureate FR/DE — Biology & Chemistry focus",
+    madeby:"And yes — I built this whole site myself, with AI. ✦"
   },
   fr:{
     hero_eyebrow:"Candidature — Business Operations @ Adaptyv",
-    hero_lead:"27 ans, 5 langues parlées couramment. Reconverti dans la tech, j'ai parié sur moi — je construis des outils qui marchent vraiment avec l'IA, pas qui en parlent. Haute autonomie, ego mesuré.",
+    hero_lead:"27 ans, 5 langues parlées couramment. Reconverti dans la tech, j'ai parié sur moi — je construis des outils concrets avec l'IA et j'aime mener les choses à bien. Autonome, ego mesuré.",
     scroll:"Déroulez l'histoire",
-    c1_tag:"01 — La construction", c1_h:"Je n'écris pas juste des emails avec l'IA. Je construis avec.",
-    c1_body:"Claude Code, Python, Notion, no-code — ce qui fait avancer le travail. Je transforme les processus manuels, lents et bordéliques en outils qui tournent tout seuls. Organisé, fiable, rien ne passe à la trappe.",
+    c1_tag:"01 — La construction", c1_h:"J'utilise l'IA pour construire de vrais outils, pas seulement pour rédiger des emails.",
+    c1_body:"Claude Code, Python, Notion, no-code — ce qui fait avancer le travail. Je transforme les processus manuels et lents en outils qui tournent tout seuls. Organisé, fiable, et attentif aux détails.",
     chip_tidy:"Carré & fiable",
-    c2_tag:"02 — À fond", c2_h:"Quand je m'engage, j'y vais à fond.",
-    c2_body:"Deux semaines en juillet, je serai en Ukraine — pour poser la question la plus importante de ma vie. Je ne fais pas les choses à moitié. La reconversion qui m'a amené dans la tech (un CFC en informatique, voie accélérée FPA) vient du même endroit : parier sur soi, puis aller au bout.",
-    c3_tag:"03 — Le moteur", c3_h:"Repérer. Prendre en main. Livrer.",
-    c3_body:"C'est exactement l'énergie que j'apporte au travail : voir le problème avant qu'on me le demande, prendre la responsabilité, aller jusqu'au bout. Haute autonomie, calme dans le chaos. Et je suis disponible dès cette semaine.",
-    c4_tag:"04 — Pourquoi vous", c4_h:"Votre liste de souhaits, mon mode par défaut.",
-    fit1_t:"« Utiliser l'IA pour corriger les workflows manuels »", fit1_m:"Exactement ce que j'adore faire — et fais déjà.",
-    fit2_t:"« Concret, organisé, fiable »", fit2_m:"Je garde tout en ordre et je vais au bout. Toujours.",
-    fit3_t:"« Entrepreneurial, haute autonomie »", fit3_m:"Je repère les problèmes avant qu'on me le demande.",
-    fit4_t:"« Intérêt sincère pour les sciences du vivant »", fit4_m:"Donner des mains aux agents IA dans le monde réel ? J'en suis.",
-    fit5_t:"« Sur site à Lausanne, dès que possible »", fit5_m:"Local et disponible immédiatement.",
-    fit6_t:"« À l'aise pour jongler entre les projets »", fit6_m:"Généraliste de nature. Amenez le chaos.",
+    c2_tag:"02 — Bon à savoir", c2_h:"Une note honnête sur ma disponibilité.",
+    c2_body:"Deux semaines en juillet, je serai en Ukraine, en vacances — pour demander ma copine en fiançailles. Je ne serai pas joignable durant cette période, et je préfère vous le dire d'emblée. En dehors de ces deux semaines, je suis pleinement disponible.",
+    c3_tag:"03 — Disponible maintenant", c3_h:"Adaptable, motivé, prêt à commencer.",
+    c3_body:"Je m'adapte vite et j'apporte une vraie motivation. Je peux commencer tout de suite — disponible à plein temps du 22 juin au 16 août (hors ces deux semaines de juillet). Et Lausanne est juste à côté, à Morges.",
+    c4_tag:"04 — Pourquoi vous", c4_h:"Ce que vous cherchez, c'est déjà ma façon de travailler.",
+    fit1_t:"« Utiliser l'IA pour corriger les workflows manuels »", fit1_m:"Exactement ce que j'aime faire — et fais déjà.",
+    fit2_t:"« Concret, organisé, fiable »", fit2_m:"Je garde tout en ordre et je vais au bout.",
+    fit3_t:"« Entrepreneurial, haute autonomie »", fit3_m:"J'ai tendance à repérer les problèmes tôt et à agir.",
+    fit4_t:"« Intérêt sincère pour les sciences du vivant »", fit4_m:"Donner des mains aux agents IA dans le monde réel m'enthousiasme sincèrement.",
+    fit5_t:"« Sur site à Lausanne, dès que possible »", fit5_m:"Basé à Morges, disponible immédiatement.",
+    fit6_t:"« À l'aise pour jongler entre les projets »", fit6_m:"Généraliste de nature — à l'aise quand les priorités changent.",
     cta_eyebrow:"Construisons", cta_h:"Prêt quand vous l'êtes.",
     cta_email:"Écrivez-moi", cta_cv:"Télécharger mon CV (PDF)",
-    m_email_l:"Email :", m_loc_l:"Lieu :", m_loc_v:"Lausanne, Suisse — prêt sur site",
-    m_avail_l:"Disponibilité :", m_avail_v:"Cette semaine · absent 2 semaines en juillet",
+    m_email_l:"Email :", m_phone_l:"Téléphone :", m_loc_l:"Lieu :", m_loc_v:"Morges, Suisse (à côté de Lausanne) — prêt sur site",
+    m_avail_l:"Disponibilité :", m_avail_v:"Temps plein, 22 juin – 16 août · absent ~2 semaines en juillet (Ukraine)",
     m_lang_l:"Langues :", m_lang_v:"Français, anglais, néerlandais, allemand & espagnol (couramment)",
     m_ph:"dites-le moi et je les ajoute",
-    madeby:"Tout ce site ? Construit avec l'IA — par moi. Démonstration faite. ✦"
+    lang_label:"Langues", edu_label:"Formation",
+    edu1:"Informaticien CFC (en cours)", edu2:"Bachelor en théologie", edu3:"Maturité bilingue FR/DE — OS biologie-chimie",
+    madeby:"Et oui — ce site, je l'ai construit moi-même, avec l'IA. ✦"
   }
 };
 
@@ -280,6 +313,7 @@ const story = document.getElementById('s0');
 const storyVid = document.getElementById('storyVid');
 const heroVid = document.getElementById('heroVid');
 const herotext = document.getElementById('herotext');
+const heroEyebrow = document.getElementById('heroEyebrowWrap');
 const cue = document.getElementById('cue');
 const beats = [...document.querySelectorAll('.beat')];
 const stills = [...document.querySelectorAll('.still')];
@@ -317,6 +351,9 @@ function render(){
   heroVid.style.opacity = heroOp.toFixed(3);
   herotext.style.opacity = heroOp.toFixed(3);
   herotext.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
+  herotext.classList.toggle('show', heroOp>0.45);
+  heroEyebrow.style.opacity = heroOp.toFixed(3);
+  heroEyebrow.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
   cue.style.opacity = heroOp.toFixed(3);
   // pause hero loop when hidden (perf)
   if(heroOp < 0.02 && heroPlaying){ heroVid.pause(); heroPlaying=false; }
@@ -347,6 +384,7 @@ function render(){
     el.style.opacity = o.toFixed(3);
     el.style.transform = `translateY(${(-50 + (1-o)*4).toFixed(2)}%)`;
     el.style.pointerEvents = o>0.5 ? 'auto' : 'none';
+    el.classList.toggle('show', o>0.35);
     // during the pause, fade in the crisp still over the (softer) video
     if(stills[i]) stills[i].style.opacity = o.toFixed(3);
   });
