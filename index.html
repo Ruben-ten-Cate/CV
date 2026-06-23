@@ -25,14 +25,17 @@
   .herovid{z-index:1}
   .still{z-index:1;opacity:0;will-change:opacity}
   .scrim{position:absolute;inset:0;z-index:2;
-    background:linear-gradient(90deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.74) 32%, rgba(8,8,10,.32) 64%, rgba(8,8,10,.10) 100%),
-               linear-gradient(0deg, rgba(8,8,10,.80) 0%, rgba(8,8,10,0) 48%)}
+    background:linear-gradient(90deg, rgba(8,8,10,.9) 0%, rgba(8,8,10,.66) 36%, rgba(8,8,10,.3) 68%, rgba(8,8,10,.12) 100%),
+               linear-gradient(0deg, rgba(8,8,10,.78) 0%, rgba(8,8,10,0) 50%)}
 
   .layers{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto}
   .beat,.hbeat{position:absolute;top:50%;left:0;width:100%;transform:translateY(-50%);opacity:0;will-change:opacity,transform}
-  #herotext{top:auto;bottom:11vh;transform:none}
-  #herotext h1{font-size:clamp(38px,6.4vw,88px);line-height:.96}
-  .hero-eyebrow-wrap{position:absolute;left:0;right:0;bottom:18vh;z-index:3;width:min(1100px,90vw);margin:0 auto;will-change:opacity}
+  /* hero text centered */
+  #herotext{text-align:center}
+  #herotext h1{font-size:clamp(40px,7vw,104px)}
+  #herotext .lead{margin-left:auto;margin-right:auto}
+  #herotext .chips{justify-content:center;margin-left:auto;margin-right:auto}
+  .hero-eyebrow-wrap{position:absolute;left:0;right:0;bottom:16vh;z-index:3;width:min(1100px,90vw);margin:0 auto;text-align:center;will-change:opacity}
 
   .beat > *, .hbeat > *{transition:transform .7s cubic-bezier(.2,.75,.2,1), filter .7s ease;transform:translateY(26px);filter:blur(6px)}
   .beat.show > *, .hbeat.show > *{transform:translateY(0);filter:blur(0)}
@@ -80,18 +83,12 @@
 
   .progress{position:fixed;top:0;left:0;height:4px;background:var(--green);z-index:60;width:0;box-shadow:0 0 12px rgba(31,223,107,.6)}
 
-  #loader{position:fixed;inset:0;z-index:300;background:var(--ink);display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:20px;transition:opacity .7s ease}
-  #loader.hide{opacity:0;pointer-events:none}
-  #loader .ring{width:44px;height:44px;border-radius:50%;border:3px solid rgba(246,241,231,.18);border-top-color:var(--green);animation:spin 1s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  #loader .llbl{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  #loader .lpct{font-family:var(--display);font-weight:700;font-size:16px;color:var(--green)}
-
-  /* 04 — conclusion overlay, shown on the final (office) frame */
-  .cta-final{position:absolute;inset:0;z-index:4;opacity:0;overflow-y:auto;will-change:opacity;
-    background:linear-gradient(90deg, rgba(8,8,10,.9) 0%, rgba(8,8,10,.66) 42%, rgba(8,8,10,.3) 100%)}
-  .cta-inner{position:relative;width:min(1100px,90vw);margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:13vh 0 9vh}
+  /* 04 — conclusion overlay, with its own office image (so it adapts on mobile) */
+  .cta-final{position:absolute;inset:0;z-index:5;opacity:0;overflow-y:auto;will-change:opacity}
+  .cta-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% center;z-index:0}
+  .cta-final::before{content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(90deg, rgba(8,8,10,.92) 0%, rgba(8,8,10,.62) 46%, rgba(8,8,10,.22) 100%)}
+  .cta-inner{position:relative;z-index:2;width:min(1100px,90vw);margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:13vh 0 9vh}
   .contact-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
   .btn{font-family:var(--display);font-weight:700;font-size:clamp(15px,1.6vw,18px);text-decoration:none;padding:16px 26px;
     border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s}
@@ -120,12 +117,15 @@
   @media (max-width:640px){
     .dots{display:none}
     .story{height:820vh}
-    .scrim{background:linear-gradient(0deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.5) 78%)}
-    .lead{max-width:90vw}
+    .scrim{background:linear-gradient(0deg, rgba(8,8,10,.9) 0%, rgba(8,8,10,.45) 80%)}
+    .lead{max-width:92vw}
+    #herotext h1{font-size:clamp(40px,12vw,68px)}
     .hero-eyebrow-wrap{bottom:13vh}
-    .cta-final{background:linear-gradient(0deg, rgba(8,8,10,.95) 0%, rgba(8,8,10,.88) 100%)}
-    .cta-inner{padding:84px 0 60px}
-    .contact-row .btn{flex:1 1 42%;justify-content:center;font-size:14px;padding:13px 16px}
+    /* mobile conclusion: keep you in frame, text fully readable */
+    .cta-bg{object-position:70% center}
+    .cta-final::before{background:linear-gradient(0deg, rgba(8,8,10,.95) 0%, rgba(8,8,10,.9) 55%, rgba(8,8,10,.8) 100%)}
+    .cta-inner{padding:84px 0 64px}
+    .contact-row .btn{flex:1 1 100%;justify-content:center;font-size:15px;padding:14px 16px}
     .meta{grid-template-columns:1fr;font-size:14px}
     .chip{font-size:12px;padding:7px 12px}
     .chip-label{min-width:auto;width:100%}
@@ -134,7 +134,6 @@
 </head>
 <body>
 
-<div id="loader"><div class="ring"></div><div class="llbl" data-i18n="loading">Loading the experience</div><div class="lpct" id="loadpct">0%</div></div>
 <div class="progress" id="progress"></div>
 
 <div class="lang" role="group" aria-label="Language">
@@ -186,8 +185,9 @@
       </div>
     </div>
 
-    <!-- 04 — CONCLUSION, on the final office frame -->
+    <!-- 04 — CONCLUSION on the final office frame -->
     <div class="cta-final" id="ctaFinal">
+      <img class="cta-bg" src="images/footer.jpg" alt="" />
       <div class="cta-inner">
         <div class="chapter-tag" data-i18n="cta_tag">04 — In conclusion</div>
         <h2 data-i18n="cta_h">I'm the person you're looking for.</h2>
@@ -232,7 +232,6 @@
 <script>
 const I18N = {
   en:{
-    loading:"Loading the experience",
     hero_eyebrow:"Application — Business Operations @ Adaptyv",
     hero_lead:"27, fluent in five languages. A career-changer who moved into tech to build — I create practical tools with AI and like seeing things through. Self-directed and motivated.",
     scroll:"Scroll the story",
@@ -259,7 +258,6 @@ const I18N = {
     madeby:"This site is proof of concept: I built it end to end by directing AI. ✦"
   },
   fr:{
-    loading:"Chargement de l'expérience",
     hero_eyebrow:"Candidature — Business Operations @ Adaptyv",
     hero_lead:"27 ans, cinq langues parlées couramment. Reconverti dans l'informatique par envie de créer — je construis des outils concrets avec l'IA et j'aime mener les choses à bien. Autonome et motivé.",
     scroll:"Déroulez l'histoire",
@@ -313,7 +311,7 @@ const stills = [...document.querySelectorAll('.still')];
 const progressBar = document.getElementById('progress');
 const dots = [...document.querySelectorAll('.dots a')];
 
-const HERO_END = 0.06;   // hero shows over the first slice of scroll, then a clean cut (no crossfade)
+const HERO_END = 0.06;
 const D = 0.004;
 const e1=1/4, e2=2/4, e3=3/4;
 const PHASES = [
@@ -351,9 +349,8 @@ function render(){
   const y=window.scrollY, vh=window.innerHeight;
   const top=story.offsetTop, len=story.offsetHeight - vh;
   const P = len>0 ? clamp((y-top)/len,0,1) : 0;
-  const Pp = clamp((P - HERO_END)/(1 - HERO_END), 0, 1);   // story progress AFTER the hero
+  const Pp = clamp((P - HERO_END)/(1 - HERO_END), 0, 1);
 
-  // hero: looping video, hard CUT (no crossfade). Story is held on the same suit frame until the cut → seamless.
   const heroVisible = P < HERO_END;
   heroVid.style.opacity = heroVisible ? '1' : '0';
   if(!heroVisible && heroPlaying){ heroVid.pause(); heroPlaying=false; }
@@ -363,7 +360,6 @@ function render(){
   herotext.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
   herotext.classList.toggle('show', heroOp>0.45);
   heroEyebrow.style.opacity = heroOp.toFixed(3);
-  heroEyebrow.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
   cue.style.opacity = heroOp.toFixed(3);
 
   let vidFrac=0; const op=[0,0,0]; let ctaOp=0;
@@ -410,33 +406,29 @@ dots.forEach(dd=>dd.addEventListener('click',()=>{
   window.scrollTo({top: story.offsetTop + pp*len, behavior:'smooth'});
 }));
 
-// loading screen: fetch the whole video once (accurate %), then scrub from a blob
-const loader=document.getElementById('loader'), loadpct=document.getElementById('loadpct');
+// silent fast preload (no loading page): fetch the small video once, then scrub from a blob
 let ready=false, loaderDone=false;
 function primeVideo(v){ const pr=v.play(); if(pr&&pr.then) pr.then(()=>{v.pause();render();}).catch(()=>{v.pause();}); else {v.pause();render();} }
-function finishLoad(){ if(loaderDone) return; loaderDone=true; ready=true; if(loader) loader.classList.add('hide'); primeVideo(storyVid); render(); }
-function setProgress(p){ if(loadpct) loadpct.textContent = Math.max(0,Math.min(100,Math.round(p)))+'%'; }
+function finishLoad(){ if(loaderDone) return; loaderDone=true; ready=true; primeVideo(storyVid); render(); }
 storyVid.muted = true;
 fetch('story.mp4').then(resp=>{
   if(!resp.ok || !resp.body) throw new Error('no stream');
-  const total = +resp.headers.get('Content-Length') || 0;
-  const reader = resp.body.getReader(); const chunks=[]; let received=0;
+  const reader = resp.body.getReader(); const chunks=[];
   return (function pump(){
     return reader.read().then(({done,value})=>{
-      if(done){ storyVid.src=URL.createObjectURL(new Blob(chunks,{type:'video/mp4'})); setProgress(100); storyVid.load(); finishLoad(); return; }
-      chunks.push(value); received+=value.length; if(total) setProgress(received/total*100);
-      return pump();
+      if(done){ storyVid.src=URL.createObjectURL(new Blob(chunks,{type:'video/mp4'})); storyVid.load(); finishLoad(); return; }
+      chunks.push(value); return pump();
     });
   })();
 }).catch(()=>{
   storyVid.src='story.mp4'; storyVid.preload='auto'; try{ storyVid.load(); }catch(e){}
   function bufEnd(){ try{const b=storyVid.buffered; return b.length?b.end(b.length-1):0;}catch(e){return 0;} }
-  function checkBuffer(){ const d=storyVid.duration; if(d&&isFinite(d)){ setProgress(bufEnd()/d*100); if(bufEnd()>=d-0.4) finishLoad(); } }
+  function checkBuffer(){ const d=storyVid.duration; if(d&&isFinite(d) && bufEnd()>=d-0.4) finishLoad(); }
   storyVid.addEventListener('progress', checkBuffer);
   storyVid.addEventListener('canplaythrough', checkBuffer);
   const t=setInterval(()=>{ if(loaderDone){clearInterval(t);return;} checkBuffer(); }, 400);
 });
-setTimeout(()=>{ if(!loaderDone){ if(!storyVid.getAttribute('src')) storyVid.src='story.mp4'; finishLoad(); } }, 30000);
+setTimeout(()=>{ if(!loaderDone){ if(!storyVid.getAttribute('src')) storyVid.src='story.mp4'; finishLoad(); } }, 20000);
 
 let start='en';
 try{ start = localStorage.getItem('cvlang') || 'en'; }catch(e){}
@@ -445,3 +437,4 @@ render();
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
