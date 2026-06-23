@@ -18,7 +18,7 @@
   html{scroll-behavior:smooth}
   body{background:var(--ink);color:var(--cream);font-family:var(--body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-  .story{position:relative;height:920vh;width:100%}
+  .story{position:relative;height:740vh;width:100%}
   .stage{position:sticky;top:0;height:100vh;width:100%;display:flex;align-items:center;overflow:hidden}
   .panel{position:relative;min-height:100vh;width:100%;display:flex;align-items:center;overflow:hidden}
 
@@ -124,7 +124,7 @@
 
   @media (max-width:640px){
     .dots{display:none}
-    .story{height:760vh}
+    .story{height:620vh}
     .scrim{background:linear-gradient(0deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.5) 78%)}
     .lead{max-width:90vw}
     .hero-eyebrow-wrap{bottom:13vh}
@@ -331,7 +331,7 @@ const PHASES = [
   {t:'hold', v:e3-D, beat:2},
   {t:'play', a:e3,   b:1}
 ];
-const W = [1.3,1.1,1.3,1.1,1.3,1.1,1.4];
+const W = [1.3,1.1,1.3,1.1,1.3,1.1,0.6];
 const WS = W.reduce((a,b)=>a+b,0);
 let acc=0; const BOUNDS = W.map(w=>{ const s=acc/WS; acc+=w; return [s, acc/WS]; });
 const holdMid = [1,3,5].map(k=> (BOUNDS[k][0]+BOUNDS[k][1])/2 );
