@@ -18,11 +18,11 @@
   html{scroll-behavior:smooth}
   body{background:var(--ink);color:var(--cream);font-family:var(--body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-  .story{position:relative;height:740vh;width:100%}
+  .story{position:relative;height:980vh;width:100%}
   .stage{position:sticky;top:0;height:100vh;width:100%;display:flex;align-items:center;overflow:hidden}
-  .panel{position:relative;min-height:100vh;width:100%;display:flex;align-items:center;overflow:hidden}
 
   .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .herovid{z-index:1}
   .still{z-index:1;opacity:0;will-change:opacity}
   .scrim{position:absolute;inset:0;z-index:2;
     background:linear-gradient(90deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.74) 32%, rgba(8,8,10,.32) 64%, rgba(8,8,10,.10) 100%),
@@ -41,10 +41,6 @@
   .beat.show .lead, .hbeat.show .lead{transition-delay:.27s}
   .beat.show .chips, .hbeat.show .chips{transition-delay:.40s}
 
-  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
-  .reveal.in{opacity:1;transform:none}
-  .reveal.d1{transition-delay:.10s} .reveal.d2{transition-delay:.20s} .reveal.d3{transition-delay:.30s} .reveal.d4{transition-delay:.40s}
-
   .eyebrow{display:inline-block;font-family:var(--display);font-weight:700;letter-spacing:.18em;text-transform:uppercase;
     font-size:clamp(11px,1.1vw,14px);color:var(--ink);background:var(--lime);padding:7px 14px;border-radius:999px;margin-bottom:22px}
   .chapter-tag{font-family:var(--display);font-weight:700;color:var(--lime);letter-spacing:.05em;
@@ -61,7 +57,7 @@
     transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s, border-color .25s, color .25s, box-shadow .25s}
   .chip:hover{transform:translateY(-3px) scale(1.05);border-color:var(--lime);color:var(--lime);
     background:rgba(31,223,107,.14);box-shadow:0 6px 20px rgba(31,223,107,.22)}
-  .chip-groups{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+  .chip-groups{display:flex;flex-direction:column;gap:14px;margin-top:26px}
   .chip-group{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
   .chip-label{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--lime);margin-right:6px;min-width:96px}
@@ -92,26 +88,25 @@
   #loader .llbl{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   #loader .lpct{font-family:var(--display);font-weight:700;font-size:16px;color:var(--green)}
 
-  /* FOOTER (normal responsive section, sits on the office frame) */
-  #contact .bg{object-position:75% center}
-  #contact .scrim{background:linear-gradient(90deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.72) 38%, rgba(8,8,10,.34) 72%, rgba(8,8,10,.12) 100%)}
-  .footer-card{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto;padding:clamp(40px,9vh,96px) 0}
-
-  .contact-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+  /* 04 — conclusion overlay, shown on the final (office) frame */
+  .cta-final{position:absolute;inset:0;z-index:4;opacity:0;overflow-y:auto;will-change:opacity;
+    background:linear-gradient(90deg, rgba(8,8,10,.9) 0%, rgba(8,8,10,.66) 42%, rgba(8,8,10,.3) 100%)}
+  .cta-inner{position:relative;width:min(1100px,90vw);margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:13vh 0 9vh}
+  .contact-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
   .btn{font-family:var(--display);font-weight:700;font-size:clamp(15px,1.6vw,18px);text-decoration:none;padding:16px 26px;
     border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s}
   .btn-primary{background:var(--lime);color:var(--ink)}
   .btn-primary:hover{background:#54f29a;transform:translateY(-3px)}
   .btn-ghost{border:1.5px solid rgba(246,241,231,.4);color:var(--cream)}
   .btn-ghost:hover{border-color:var(--lime);color:var(--lime);transform:translateY(-3px)}
-  .meta{margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 28px;color:var(--muted);font-size:15px}
+  .meta{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 28px;color:var(--muted);font-size:15px}
   .meta b{color:var(--cream);font-weight:600;display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
   .meta a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(246,241,231,.25)}
-  .madeby{margin-top:40px;font-family:var(--display);font-size:clamp(14px,1.5vw,17px);color:var(--lime);font-weight:500}
+  .madeby{margin-top:34px;font-family:var(--display);font-size:clamp(14px,1.5vw,17px);color:var(--lime);font-weight:500}
 
-  .qa-head{font-family:var(--display);font-weight:700;color:var(--lime);letter-spacing:.04em;font-size:clamp(15px,1.7vw,19px);margin:40px 0 14px;max-width:30ch}
+  .qa-head{font-family:var(--display);font-weight:700;color:var(--lime);letter-spacing:.04em;font-size:clamp(15px,1.7vw,19px);margin:34px 0 14px;max-width:30ch}
   .qa-acc{display:flex;flex-direction:column;gap:8px;max-width:760px}
-  .qa{border:1.5px solid rgba(246,241,231,.16);border-radius:14px;background:rgba(10,10,12,.45);transition:border-color .25s}
+  .qa{border:1.5px solid rgba(246,241,231,.16);border-radius:14px;background:rgba(10,10,12,.5);transition:border-color .25s}
   .qa[open]{border-color:rgba(31,223,107,.45)}
   .qa summary{list-style:none;cursor:pointer;padding:15px 18px;font-family:var(--display);font-weight:600;
     font-size:clamp(14px,1.5vw,17px);color:var(--cream);display:flex;justify-content:space-between;align-items:center;gap:14px}
@@ -124,14 +119,12 @@
 
   @media (max-width:640px){
     .dots{display:none}
-    .story{height:620vh}
+    .story{height:820vh}
     .scrim{background:linear-gradient(0deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.5) 78%)}
     .lead{max-width:90vw}
     .hero-eyebrow-wrap{bottom:13vh}
-    .panel{align-items:flex-start}
-    #contact .bg{object-position:70% center}
-    #contact .scrim{background:linear-gradient(0deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.86) 60%, rgba(8,8,10,.8) 100%)}
-    .footer-card{padding:80px 0 64px}
+    .cta-final{background:linear-gradient(0deg, rgba(8,8,10,.95) 0%, rgba(8,8,10,.88) 100%)}
+    .cta-inner{padding:84px 0 60px}
     .contact-row .btn{flex:1 1 42%;justify-content:center;font-size:14px;padding:13px 16px}
     .meta{grid-template-columns:1fr;font-size:14px}
     .chip{font-size:12px;padding:7px 12px}
@@ -153,12 +146,13 @@
   <a data-go="0" class="active"></a>
   <a data-go="1"></a>
   <a data-go="2"></a>
-  <a data-go="contact"></a>
+  <a data-go="3"></a>
 </nav>
 
 <section class="story" id="s0">
   <div class="stage">
     <video class="bg" id="storyVid" muted playsinline preload="auto" poster="images/1.jpg"></video>
+    <video class="bg herovid" id="heroVid" src="images/hero.mp4" autoplay muted loop playsinline poster="images/1.jpg"></video>
     <img class="bg still" data-beat="0" src="images/2.jpg" alt="" />
     <img class="bg still" data-beat="1" src="images/3.jpg" alt="" />
     <img class="bg still" data-beat="2" src="images/4.jpg" alt="" />
@@ -191,47 +185,47 @@
         <p class="lead" data-i18n="c3_body">I adapt quickly and bring real motivation. I live in Morges, right next to Lausanne, so I'm on-site ready — and I can start this week.</p>
       </div>
     </div>
-    <div class="hero-eyebrow-wrap" id="heroEyebrowWrap"><span class="eyebrow" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span></div>
-    <div class="scroll-cue" id="cue"><span data-i18n="scroll">Scroll the story</span><span class="dot"></span></div>
-  </div>
-</section>
 
-<section class="panel" id="contact">
-  <img class="bg" src="images/footer.jpg" alt="" />
-  <div class="scrim"></div>
-  <div class="footer-card">
-    <span class="eyebrow reveal" data-i18n="cta_eyebrow">Let's work together</span>
-    <h2 class="reveal d1" data-i18n="cta_h">I'm the person you're looking for.</h2>
-    <div class="contact-row reveal d2">
-      <a class="btn btn-primary" href="mailto:tencateruben@gmail.com?subject=Business%20Operations%20Intern%20%E2%80%94%20Ruben%20ten%20Cate"><span data-i18n="cta_email">Email me</span> →</a>
-      <a class="btn btn-ghost" href="https://www.linkedin.com/in/ruben-ten-cate/" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a class="btn btn-ghost" href="https://github.com/Ruben-ten-Cate" target="_blank" rel="noopener">GitHub ↗</a>
-      <a class="btn btn-ghost" href="Ruben-ten-Cate-CV.pdf" download data-i18n="cta_cv">Download my CV (PDF)</a>
-    </div>
-    <div class="meta reveal d2">
-      <span><b data-i18n="m_email_l">Email</b><a href="mailto:tencateruben@gmail.com">tencateruben@gmail.com</a></span>
-      <span><b data-i18n="m_phone_l">Phone</b><a href="tel:+41786850210">+41 78 685 02 10</a></span>
-      <span><b data-i18n="m_loc_l">Location</b><span data-i18n="m_loc_v">Morges, Switzerland (next to Lausanne)</span></span>
-      <span><b data-i18n="m_avail_l">Availability</b><span data-i18n="m_avail_v">Full-time, 22 Jun – 16 Aug · away ~2 weeks in July</span></span>
-    </div>
-    <div class="chip-groups reveal d3">
-      <div class="chip-group">
-        <span class="chip-label" data-i18n="edu_label">Education</span>
-        <span class="chip" data-i18n="edu1">IT Technician — CFC (in progress)</span>
-        <span class="chip" data-i18n="edu2">Bachelor in Theology</span>
-        <span class="chip" data-i18n="edu3">Bilingual Baccalaureate FR/DE — Biology &amp; Chemistry focus</span>
+    <!-- 04 — CONCLUSION, on the final office frame -->
+    <div class="cta-final" id="ctaFinal">
+      <div class="cta-inner">
+        <div class="chapter-tag" data-i18n="cta_tag">04 — In conclusion</div>
+        <h2 data-i18n="cta_h">I'm the person you're looking for.</h2>
+        <div class="contact-row">
+          <a class="btn btn-primary" href="mailto:tencateruben@gmail.com?subject=Business%20Operations%20Intern%20%E2%80%94%20Ruben%20ten%20Cate"><span data-i18n="cta_email">Email me</span> →</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/ruben-ten-cate/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn btn-ghost" href="https://github.com/Ruben-ten-Cate" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="btn btn-ghost" href="Ruben-ten-Cate-CV.pdf" download data-i18n="cta_cv">Download my CV (PDF)</a>
+        </div>
+        <div class="meta">
+          <span><b data-i18n="m_email_l">Email</b><a href="mailto:tencateruben@gmail.com">tencateruben@gmail.com</a></span>
+          <span><b data-i18n="m_phone_l">Phone</b><a href="tel:+41786850210">+41 78 685 02 10</a></span>
+          <span><b data-i18n="m_loc_l">Location</b><span data-i18n="m_loc_v">Morges, Switzerland (next to Lausanne)</span></span>
+          <span><b data-i18n="m_avail_l">Availability</b><span data-i18n="m_avail_v">Full-time, 22 Jun – 16 Aug · away ~2 weeks in July</span></span>
+        </div>
+        <div class="chip-groups">
+          <div class="chip-group">
+            <span class="chip-label" data-i18n="edu_label">Education</span>
+            <span class="chip" data-i18n="edu1">IT Technician — CFC (in progress)</span>
+            <span class="chip" data-i18n="edu2">Bachelor in Theology</span>
+            <span class="chip" data-i18n="edu3">Bilingual Baccalaureate FR/DE — Biology &amp; Chemistry focus</span>
+          </div>
+        </div>
+        <div class="qa-head" data-i18n="qa_h">What you're looking for is how I already work.</div>
+        <div class="qa-acc">
+          <details class="qa"><summary data-i18n="fit1_t">Can you use AI to fix manual, slow workflows?</summary><div class="qa-a" data-i18n="fit1_m">Exactly what I enjoy — I already build automations with Claude Code and Python.</div></details>
+          <details class="qa"><summary data-i18n="fit2_t">Are you hands-on, organized and reliable?</summary><div class="qa-a" data-i18n="fit2_m">I keep things tidy and see tasks through to the end.</div></details>
+          <details class="qa"><summary data-i18n="fit3_t">Are you entrepreneurial and self-directed?</summary><div class="qa-a" data-i18n="fit3_m">I tend to notice problems early and take the initiative.</div></details>
+          <details class="qa"><summary data-i18n="fit4_t">Do you have a genuine interest in the life sciences?</summary><div class="qa-a" data-i18n="fit4_m">Genuine — my Maturité specialised in biology and chemistry, and giving AI agents hands in the real world excites me.</div></details>
+          <details class="qa"><summary data-i18n="fit5_t">Can you work on-site in Lausanne, starting soon?</summary><div class="qa-a" data-i18n="fit5_m">I live in Morges, next to Lausanne, and can start immediately.</div></details>
+          <details class="qa"><summary data-i18n="fit6_t">Are you comfortable juggling shifting priorities?</summary><div class="qa-a" data-i18n="fit6_m">Generalist by nature — I'm at ease when priorities change.</div></details>
+        </div>
+        <p class="madeby" data-i18n="madeby">This site is proof of concept: I built it end to end by directing AI. ✦</p>
       </div>
     </div>
-    <div class="qa-head reveal d3" data-i18n="qa_h">What you're looking for is how I already work.</div>
-    <div class="qa-acc reveal d3">
-      <details class="qa"><summary data-i18n="fit1_t">Can you use AI to fix manual, slow workflows?</summary><div class="qa-a" data-i18n="fit1_m">Exactly what I enjoy — I already build automations with Claude Code and Python.</div></details>
-      <details class="qa"><summary data-i18n="fit2_t">Are you hands-on, organized and reliable?</summary><div class="qa-a" data-i18n="fit2_m">I keep things tidy and see tasks through to the end.</div></details>
-      <details class="qa"><summary data-i18n="fit3_t">Are you entrepreneurial and self-directed?</summary><div class="qa-a" data-i18n="fit3_m">I tend to notice problems early and take the initiative.</div></details>
-      <details class="qa"><summary data-i18n="fit4_t">Do you have a genuine interest in the life sciences?</summary><div class="qa-a" data-i18n="fit4_m">Genuine — my Maturité specialised in biology and chemistry, and giving AI agents hands in the real world excites me.</div></details>
-      <details class="qa"><summary data-i18n="fit5_t">Can you work on-site in Lausanne, starting soon?</summary><div class="qa-a" data-i18n="fit5_m">I live in Morges, next to Lausanne, and can start immediately.</div></details>
-      <details class="qa"><summary data-i18n="fit6_t">Are you comfortable juggling shifting priorities?</summary><div class="qa-a" data-i18n="fit6_m">Generalist by nature — I'm at ease when priorities change.</div></details>
-    </div>
-    <p class="madeby reveal d4" data-i18n="madeby">This site is proof of concept: I built it end to end by directing AI. ✦</p>
+
+    <div class="hero-eyebrow-wrap" id="heroEyebrowWrap"><span class="eyebrow" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span></div>
+    <div class="scroll-cue" id="cue"><span data-i18n="scroll">Scroll the story</span><span class="dot"></span></div>
   </div>
 </section>
 
@@ -248,6 +242,7 @@ const I18N = {
     c2_body:"I'm available full-time from 22 June to 16 August. The one exception: two weeks in July, when I'll be in Ukraine to propose to my girlfriend.",
     c3_tag:"03 — Ready to start", c3_h:"Adaptable, motivated, ready now.",
     c3_body:"I adapt quickly and bring real motivation. I live in Morges, right next to Lausanne, so I'm on-site ready — and I can start this week.",
+    cta_tag:"04 — In conclusion",
     qa_h:"What you're looking for is how I already work.",
     fit1_t:"Can you use AI to fix manual, slow workflows?", fit1_m:"Exactly what I enjoy — I already build automations with Claude Code and Python.",
     fit2_t:"Are you hands-on, organized and reliable?", fit2_m:"I keep things tidy and see tasks through to the end.",
@@ -255,7 +250,7 @@ const I18N = {
     fit4_t:"Do you have a genuine interest in the life sciences?", fit4_m:"Genuine — my Maturité specialised in biology and chemistry, and giving AI agents hands in the real world excites me.",
     fit5_t:"Can you work on-site in Lausanne, starting soon?", fit5_m:"I live in Morges, next to Lausanne, and can start immediately.",
     fit6_t:"Are you comfortable juggling shifting priorities?", fit6_m:"Generalist by nature — I'm at ease when priorities change.",
-    cta_eyebrow:"Let's work together", cta_h:"I'm the person you're looking for.",
+    cta_h:"I'm the person you're looking for.",
     cta_email:"Email me", cta_cv:"Download my CV (PDF)",
     m_email_l:"Email", m_phone_l:"Phone", m_loc_l:"Location", m_loc_v:"Morges, Switzerland (next to Lausanne)",
     m_avail_l:"Availability", m_avail_v:"Full-time, 22 Jun – 16 Aug · away ~2 weeks in July",
@@ -274,6 +269,7 @@ const I18N = {
     c2_body:"Je suis disponible à plein temps du 22 juin au 16 août. La seule exception : deux semaines en juillet, où je serai en Ukraine pour demander ma copine en fiançailles.",
     c3_tag:"03 — Prêt à commencer", c3_h:"Adaptable, motivé, prêt maintenant.",
     c3_body:"Je m'adapte vite et j'apporte une vraie motivation. J'habite à Morges, juste à côté de Lausanne — donc prêt sur site, et je peux commencer cette semaine.",
+    cta_tag:"04 — En conclusion",
     qa_h:"Ce que vous cherchez, c'est déjà ma façon de travailler.",
     fit1_t:"Sais-tu utiliser l'IA pour corriger des workflows manuels et lents ?", fit1_m:"Exactement ce que j'aime faire — je construis déjà des automatisations avec Claude Code et Python.",
     fit2_t:"Es-tu concret, organisé et fiable ?", fit2_m:"Je garde tout en ordre et je vais au bout des choses.",
@@ -281,7 +277,7 @@ const I18N = {
     fit4_t:"As-tu un intérêt sincère pour les sciences du vivant ?", fit4_m:"Sincère — ma maturité était en biologie-chimie, et donner des mains aux agents IA dans le monde réel m'enthousiasme.",
     fit5_t:"Peux-tu travailler sur site à Lausanne, rapidement ?", fit5_m:"J'habite à Morges, à côté de Lausanne, et je peux commencer immédiatement.",
     fit6_t:"Es-tu à l'aise pour jongler entre des priorités changeantes ?", fit6_m:"Généraliste de nature — à l'aise quand les priorités changent.",
-    cta_eyebrow:"Travaillons ensemble", cta_h:"Je suis la personne que vous cherchez.",
+    cta_h:"Je suis la personne que vous cherchez.",
     cta_email:"Écrivez-moi", cta_cv:"Télécharger mon CV (PDF)",
     m_email_l:"Email", m_phone_l:"Téléphone", m_loc_l:"Lieu", m_loc_v:"Morges, Suisse (à côté de Lausanne)",
     m_avail_l:"Disponibilité", m_avail_v:"Temps plein, 22 juin – 16 août · absent ~2 semaines en juillet",
@@ -302,24 +298,22 @@ function setLang(lang){
   try{ localStorage.setItem('cvlang',lang); }catch(e){}
 }
 
-const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }); },{threshold:.18});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth=(e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 
 const story = document.getElementById('s0');
 const storyVid = document.getElementById('storyVid');
+const heroVid = document.getElementById('heroVid');
 const herotext = document.getElementById('herotext');
 const heroEyebrow = document.getElementById('heroEyebrowWrap');
 const cue = document.getElementById('cue');
-const contactEl = document.getElementById('contact');
+const ctaFinal = document.getElementById('ctaFinal');
 const beats = [...document.querySelectorAll('.beat')];
 const stills = [...document.querySelectorAll('.still')];
 const progressBar = document.getElementById('progress');
 const dots = [...document.querySelectorAll('.dots a')];
 
-const HERO_END = 0.07;
+const HERO_END = 0.06;   // hero shows over the first slice of scroll, then a clean cut (no crossfade)
 const D = 0.004;
 const e1=1/4, e2=2/4, e3=3/4;
 const PHASES = [
@@ -329,14 +323,15 @@ const PHASES = [
   {t:'hold', v:e2-D, beat:1},
   {t:'play', a:e2,   b:e3-D},
   {t:'hold', v:e3-D, beat:2},
-  {t:'play', a:e3,   b:1}
+  {t:'play', a:e3,   b:1-D},
+  {t:'hold', v:1-D,  cta:true}
 ];
-const W = [1.3,1.1,1.3,1.1,1.3,1.1,0.6];
+const W = [1.3,1.1,1.3,1.1,1.3,1.1,1.0,1.7];
 const WS = W.reduce((a,b)=>a+b,0);
 let acc=0; const BOUNDS = W.map(w=>{ const s=acc/WS; acc+=w; return [s, acc/WS]; });
-const holdMid = [1,3,5].map(k=> (BOUNDS[k][0]+BOUNDS[k][1])/2 );
+const holdMid = [1,3,5,7].map(k=> (BOUNDS[k][0]+BOUNDS[k][1])/2 );
 
-let ticking=false;
+let ticking=false, heroPlaying=true;
 let targetT=0, dispT=0, animOn=false;
 const EASE=0.12;
 function animate(){
@@ -356,7 +351,13 @@ function render(){
   const y=window.scrollY, vh=window.innerHeight;
   const top=story.offsetTop, len=story.offsetHeight - vh;
   const P = len>0 ? clamp((y-top)/len,0,1) : 0;
+  const Pp = clamp((P - HERO_END)/(1 - HERO_END), 0, 1);   // story progress AFTER the hero
 
+  // hero: looping video, hard CUT (no crossfade). Story is held on the same suit frame until the cut → seamless.
+  const heroVisible = P < HERO_END;
+  heroVid.style.opacity = heroVisible ? '1' : '0';
+  if(!heroVisible && heroPlaying){ heroVid.pause(); heroPlaying=false; }
+  else if(heroVisible && !heroPlaying){ heroVid.play().catch(()=>{}); heroPlaying=true; }
   const heroOp = 1 - smooth(0, HERO_END, P);
   herotext.style.opacity = heroOp.toFixed(3);
   herotext.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
@@ -365,13 +366,14 @@ function render(){
   heroEyebrow.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
   cue.style.opacity = heroOp.toFixed(3);
 
-  let vidFrac=0; const op=[0,0,0];
+  let vidFrac=0; const op=[0,0,0]; let ctaOp=0;
   for(let i=0;i<PHASES.length;i++){
     const [ps,pe]=BOUNDS[i];
-    if(P>=ps && P<=pe+1e-6){
-      const lp = pe>ps ? clamp((P-ps)/(pe-ps),0,1) : 0;
+    if(Pp>=ps && Pp<=pe+1e-6){
+      const lp = pe>ps ? clamp((Pp-ps)/(pe-ps),0,1) : 0;
       const ph=PHASES[i];
       if(ph.t==='play'){ vidFrac = ph.a + lp*(ph.b-ph.a); }
+      else if(ph.cta){ vidFrac = ph.v; ctaOp = clamp(lp<0.30 ? lp/0.30 : 1, 0, 1); }
       else { vidFrac = ph.v; let o=1; if(lp<0.22)o=lp/0.22; else if(lp>0.80)o=(1-lp)/0.20; op[ph.beat]=clamp(o,0,1); }
       break;
     }
@@ -379,20 +381,22 @@ function render(){
   const d=storyVid.duration;
   if(ready && d && isFinite(d)){ targetT = clamp(vidFrac*d, 0, d-0.04); ensureAnim(); }
   beats.forEach((el,i)=>{
-    const o = heroOp>0.5 ? 0 : op[i];
+    const o = heroVisible ? 0 : op[i];
     el.style.opacity = o.toFixed(3);
     el.style.transform = `translateY(${(-50 + (1-o)*4).toFixed(2)}%)`;
     el.style.pointerEvents = o>0.5 ? 'auto' : 'none';
     el.classList.toggle('show', o>0.35);
   });
-  stills.forEach(im=>{ const b=+im.dataset.beat; im.style.opacity = op[b]>0.5 ? '1' : '0'; });
+  stills.forEach(im=>{ const b=+im.dataset.beat; im.style.opacity = (!heroVisible && op[b]>0.5) ? '1' : '0'; });
+  ctaFinal.style.opacity = ctaOp.toFixed(3);
+  ctaFinal.style.pointerEvents = ctaOp>0.5 ? 'auto' : 'none';
 
   const max = document.body.scrollHeight - vh;
   progressBar.style.width = (max>0 ? (y/max*100) : 0) + '%';
 
-  const mid = y + vh*0.55; let active;
-  if(contactEl.offsetTop <= mid) active = 3;
-  else active = P<=BOUNDS[1][1] ? 0 : (P<=BOUNDS[3][1] ? 1 : 2);
+  let active;
+  if(Pp >= BOUNDS[6][0]) active = 3;
+  else active = Pp<=BOUNDS[1][1] ? 0 : (Pp<=BOUNDS[3][1] ? 1 : 2);
   dots.forEach((dd,i)=>dd.classList.toggle('active', i===active));
 }
 function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(render); } }
@@ -400,13 +404,13 @@ window.addEventListener('scroll', onScroll, {passive:true});
 window.addEventListener('resize', render);
 
 dots.forEach(dd=>dd.addEventListener('click',()=>{
-  const g = dd.getAttribute('data-go');
-  if(g==='contact'){ window.scrollTo({top: contactEl.offsetTop, behavior:'smooth'}); return; }
+  const i = +dd.getAttribute('data-go');
   const len = story.offsetHeight - window.innerHeight;
-  window.scrollTo({top: story.offsetTop + holdMid[+g]*len, behavior:'smooth'});
+  const pp = HERO_END + holdMid[i]*(1-HERO_END);
+  window.scrollTo({top: story.offsetTop + pp*len, behavior:'smooth'});
 }));
 
-// loading screen: fetch the whole video once (accurate %), then scrub from a blob (smooth, no seek-thrash)
+// loading screen: fetch the whole video once (accurate %), then scrub from a blob
 const loader=document.getElementById('loader'), loadpct=document.getElementById('loadpct');
 let ready=false, loaderDone=false;
 function primeVideo(v){ const pr=v.play(); if(pr&&pr.then) pr.then(()=>{v.pause();render();}).catch(()=>{v.pause();}); else {v.pause();render();} }
@@ -441,4 +445,3 @@ render();
 </script>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
