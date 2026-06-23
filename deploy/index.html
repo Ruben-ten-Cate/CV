@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ruben ten Cate — Business Operations @ Adaptyv</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --green:#1fdf6b; /* vivid validation green — main accent */
+    --ink:#0a0a0c; --coral:#ff5a36; --pink:#1fdf6b; --lime:#1fdf6b; /* green accent everywhere */
+    --cream:#f6f1e7; --muted:rgba(246,241,231,.72);
+    --display:'Space Grotesk',sans-serif; --body:'Inter',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--cream);font-family:var(--body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+  /* ONE pinned, scroll-scrubbed story (hero loops at the very top) */
+  .story{position:relative;height:1100vh;width:100%}
+  /* footer shown as the final overlay, pinned over the last (office) frame */
+  .cta-final{position:absolute;inset:0;z-index:4;opacity:0;overflow-y:auto;will-change:opacity;
+    background:linear-gradient(rgba(8,8,10,.55), rgba(8,8,10,.72))}
+  .cta-inner{position:relative;width:min(1100px,90vw);margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:14vh 0 9vh}
+  .stage{position:sticky;top:0;height:100vh;width:100%;display:flex;align-items:center;overflow:hidden}
+  .panel{position:relative;min-height:100vh;width:100%;display:flex;align-items:center;overflow:hidden}
+
+  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .herovid{z-index:1;will-change:opacity}
+  .still{z-index:1;opacity:0;will-change:opacity}
+  .scrim{position:absolute;inset:0;z-index:2;
+    background:linear-gradient(90deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.74) 32%, rgba(8,8,10,.32) 64%, rgba(8,8,10,.10) 100%),
+               linear-gradient(0deg, rgba(8,8,10,.80) 0%, rgba(8,8,10,0) 48%)}
+  .gradient-bg{position:absolute;inset:0;z-index:0;
+    background:radial-gradient(120% 120% at 12% 0%, rgba(31,223,107,.16) 0%, rgba(10,10,12,0) 42%),
+               radial-gradient(120% 120% at 100% 100%, rgba(31,223,107,.12) 0%, rgba(10,10,12,0) 45%),
+               linear-gradient(160deg, #11160f 0%, #0a0a0c 62%)}
+
+  .wrap{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto;padding:clamp(20px,6vh,80px) 0}
+  .layers{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto}
+  .beat,.hbeat{position:absolute;top:50%;left:0;width:100%;transform:translateY(-50%);opacity:0;will-change:opacity,transform}
+  /* hero badge pinned to the bottom-left of the hero (title stays centered) */
+  .hero-eyebrow-wrap{position:absolute;left:0;right:0;bottom:18vh;z-index:3;width:min(1100px,90vw);margin:0 auto;will-change:opacity}
+
+  /* staggered entrance for the text inside each beat */
+  .beat > *, .hbeat > *{transition:transform .7s cubic-bezier(.2,.75,.2,1), filter .7s ease;transform:translateY(26px);filter:blur(6px)}
+  .beat.show > *, .hbeat.show > *{transform:translateY(0);filter:blur(0)}
+  .beat.show .chapter-tag, .hbeat.show .eyebrow{transition-delay:.05s}
+  .beat.show h2, .hbeat.show h1{transition-delay:.15s}
+  .beat.show .lead, .hbeat.show .lead{transition-delay:.27s}
+  .beat.show .chips, .hbeat.show .chips{transition-delay:.40s}
+
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.10s} .reveal.d2{transition-delay:.20s} .reveal.d3{transition-delay:.30s} .reveal.d4{transition-delay:.40s}
+
+  .eyebrow{display:inline-block;font-family:var(--display);font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    font-size:clamp(11px,1.1vw,14px);color:var(--ink);background:var(--lime);padding:7px 14px;border-radius:999px;margin-bottom:22px}
+  .chapter-tag{font-family:var(--display);font-weight:700;color:var(--lime);letter-spacing:.05em;
+    font-size:clamp(13px,1.4vw,16px);margin-bottom:16px;text-transform:uppercase}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(48px,11vw,140px);line-height:.92;letter-spacing:-.02em}
+  h1 .stroke{-webkit-text-stroke:2px var(--cream);color:transparent}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(30px,5.2vw,68px);line-height:1.0;letter-spacing:-.015em;max-width:16ch;color:var(--cream)}
+  .lead{font-size:clamp(17px,2vw,23px);line-height:1.5;color:var(--muted);max-width:48ch;margin-top:22px}
+  .beat h2,.hbeat h1,.beat .lead,.hbeat .lead{text-shadow:0 2px 24px rgba(0,0,0,.55)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;max-width:46ch}
+  .chip{font-family:var(--display);font-weight:500;font-size:clamp(12px,1.3vw,15px);padding:9px 16px;border-radius:999px;
+    border:1.5px solid rgba(246,241,231,.35);background:rgba(246,241,231,.05);backdrop-filter:blur(4px);
+    transition:transform .5s cubic-bezier(.2,.75,.2,1), background .25s, border-color .25s}
+  .chip-groups{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+  .chip-group{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .chip-label{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--lime);margin-right:6px;min-width:96px}
+
+  .scroll-cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:4;font-family:var(--display);
+    font-weight:500;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:flex;flex-direction:column;align-items:center;gap:8px;will-change:opacity}
+  .scroll-cue .dot{width:2px;height:34px;background:linear-gradient(var(--cream),transparent);animation:drop 1.6s infinite}
+  @keyframes drop{0%{opacity:0;transform:translateY(-10px)}40%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
+
+  .lang{position:fixed;top:22px;right:22px;z-index:50;display:flex;background:rgba(10,10,12,.55);
+    border:1.5px solid rgba(246,241,231,.25);border-radius:999px;padding:4px;backdrop-filter:blur(8px)}
+  .lang button{font-family:var(--display);font-weight:700;font-size:13px;color:var(--muted);background:transparent;
+    border:none;cursor:pointer;padding:7px 14px;border-radius:999px;transition:.25s}
+  .lang button.active{background:var(--lime);color:var(--ink)}
+
+  .dots{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:14px}
+  .dots a{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--muted);transition:.25s;cursor:pointer}
+  .dots a.active{background:var(--lime);border-color:var(--lime);transform:scale(1.25)}
+
+  .progress{position:fixed;top:0;left:0;height:4px;background:var(--green);z-index:60;width:0;box-shadow:0 0 12px rgba(31,223,107,.6)}
+
+  /* Q&A accordion (in the footer) */
+  .qa-head{font-family:var(--display);font-weight:700;color:var(--lime);letter-spacing:.04em;font-size:clamp(15px,1.7vw,19px);margin:40px 0 14px;max-width:30ch}
+  .qa-acc{display:flex;flex-direction:column;gap:8px;max-width:760px}
+  .qa{border:1.5px solid rgba(246,241,231,.16);border-radius:14px;background:rgba(246,241,231,.04);transition:border-color .25s}
+  .qa[open]{border-color:rgba(31,223,107,.45)}
+  .qa summary{list-style:none;cursor:pointer;padding:15px 18px;font-family:var(--display);font-weight:600;
+    font-size:clamp(14px,1.5vw,17px);color:var(--cream);display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .qa summary::-webkit-details-marker{display:none}
+  .qa summary::after{content:"+";color:var(--lime);font-weight:700;font-size:22px;line-height:1;flex:0 0 auto}
+  .qa[open] summary::after{content:"–"}
+  .qa summary:hover{color:var(--lime)}
+  .qa .qa-a{padding:0 18px 16px;color:var(--muted);font-size:clamp(14px,1.5vw,16px);line-height:1.5;display:flex;gap:10px}
+  .qa .qa-a::before{content:"✓";color:var(--lime);font-weight:700;flex:0 0 auto}
+
+  /* contact / footer */
+  .contact-card{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto;padding:clamp(24px,6vh,72px) 0}
+  .contact-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+  .btn{font-family:var(--display);font-weight:700;font-size:clamp(15px,1.6vw,18px);text-decoration:none;padding:16px 26px;
+    border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s}
+  .btn-primary{background:var(--lime);color:var(--ink)}
+  .btn-primary:hover{background:#54f29a;transform:translateY(-3px)}
+  .btn-ghost{border:1.5px solid rgba(246,241,231,.4);color:var(--cream)}
+  .btn-ghost:hover{border-color:var(--lime);color:var(--lime);transform:translateY(-3px)}
+  .meta{margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 28px;color:var(--muted);font-size:15px}
+  .meta b{color:var(--cream);font-weight:600;display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+  .meta a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(246,241,231,.25)}
+  .footer-img{object-position:72% center}
+  .madeby{margin-top:40px;font-family:var(--display);font-size:clamp(14px,1.5vw,17px);color:var(--lime);font-weight:500}
+
+  @media (max-width:640px){
+    .dots{display:none}
+    .story{height:860vh}
+    .scrim{background:linear-gradient(0deg, rgba(8,8,10,.93) 0%, rgba(8,8,10,.5) 78%)}
+    .lead{max-width:90vw}
+    .hero-eyebrow-wrap{bottom:13vh}
+    .cta-inner{padding:86px 0 60px}
+    .contact-row{gap:10px}
+    .contact-row .btn{font-size:14px;padding:13px 16px;flex:1 1 42%;justify-content:center}
+    .meta{grid-template-columns:1fr;font-size:14px;margin-top:24px}
+    .chip{font-size:12px;padding:7px 12px}
+    .chip-label{min-width:auto;width:100%}
+    .qa-a{font-size:16px}
+    .madeby{margin-top:28px}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="lang" role="group" aria-label="Language">
+  <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+  <button id="btn-fr" onclick="setLang('fr')">FR</button>
+</div>
+
+<nav class="dots" aria-hidden="true">
+  <a data-go="0" class="active"></a>
+  <a data-go="1"></a>
+  <a data-go="2"></a>
+  <a data-go="3"></a>
+</nav>
+
+<!-- STORY: hero loops at the top; scrolling starts the scrubbed story -->
+<section class="story" id="s0">
+  <div class="stage">
+    <video class="bg" id="storyVid" src="story.mp4" muted playsinline preload="auto" poster="images/1.jpg"></video>
+    <video class="bg herovid" id="heroVid" src="images/hero.mp4" autoplay muted loop playsinline poster="images/1.jpg"></video>
+    <img class="bg still" data-beat="0" src="images/2.jpg" alt="" />
+    <img class="bg still" data-beat="1" src="images/3.jpg" alt="" />
+    <img class="bg still" data-beat="2" src="images/4.jpg" alt="" />
+    <div class="scrim"></div>
+    <div class="layers">
+      <!-- HERO (idle, looping) -->
+      <div class="hbeat" id="herotext">
+        <h1>Ruben<br><span class="stroke">ten Cate</span></h1>
+        <p class="lead" data-i18n="hero_lead">27, fluent in five languages. A career-changer who moved into tech to build.</p>
+        <div class="chips">
+          <span class="chip">Français</span><span class="chip">English</span><span class="chip">Nederlands</span><span class="chip">Deutsch</span><span class="chip">Español</span>
+        </div>
+      </div>
+      <!-- BEAT 0 -->
+      <div class="beat" data-beat="0">
+        <div class="chapter-tag" data-i18n="c1_tag">01 — Code &amp; science</div>
+        <h2 data-i18n="c1_h">I love to code — and I'm drawn to the science.</h2>
+        <p class="lead" data-i18n="c1_body">I'm in CFC informatique, and coding is what I enjoy most — I use AI (Claude Code, Python) to build real tools, not just to draft emails. I'm also genuinely interested in biology and chemistry; my Maturité specialised in both. Adaptyv is exactly that intersection.</p>
+        <div class="chips">
+          <span class="chip">Claude Code</span><span class="chip">Python</span><span class="chip">C#</span>
+          <span class="chip">SQL</span><span class="chip">JavaScript</span><span class="chip">HTML / CSS</span>
+        </div>
+      </div>
+      <!-- BEAT 1 -->
+      <div class="beat" data-beat="1">
+        <div class="chapter-tag" data-i18n="c2_tag">02 — Availability</div>
+        <h2 data-i18n="c2_h">One honest note on my availability.</h2>
+        <p class="lead" data-i18n="c2_body">I'm available full-time from 22 June to 16 August. The one exception: two weeks in July, when I'll be in Ukraine to propose to my girlfriend.</p>
+      </div>
+      <!-- BEAT 2 -->
+      <div class="beat" data-beat="2">
+        <div class="chapter-tag" data-i18n="c3_tag">03 — Ready to start</div>
+        <h2 data-i18n="c3_h">Adaptable, motivated, ready now.</h2>
+        <p class="lead" data-i18n="c3_body">I adapt quickly and bring real motivation. I live in Morges, right next to Lausanne, so I'm on-site ready — and I can start this week.</p>
+      </div>
+    </div>
+    <!-- FOOTER as the final overlay, sitting on the last (office) frame -->
+    <div class="cta-final" id="ctaFinal">
+      <div class="cta-inner">
+        <span class="eyebrow" data-i18n="cta_eyebrow">Let's work together</span>
+        <h2 data-i18n="cta_h">I'm the person you're looking for.</h2>
+        <div class="contact-row">
+          <a class="btn btn-primary" href="mailto:tencateruben@gmail.com?subject=Business%20Operations%20Intern%20%E2%80%94%20Ruben%20ten%20Cate"><span data-i18n="cta_email">Email me</span> →</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/ruben-ten-cate/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn btn-ghost" href="https://github.com/Ruben-ten-Cate" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="btn btn-ghost" id="cv-link" href="#" data-i18n="cta_cv">Download my CV (PDF)</a>
+        </div>
+        <div class="meta">
+          <span><b data-i18n="m_email_l">Email</b><a href="mailto:tencateruben@gmail.com">tencateruben@gmail.com</a></span>
+          <span><b data-i18n="m_phone_l">Phone</b><a href="tel:+41786850210">+41 78 685 02 10</a></span>
+          <span><b data-i18n="m_loc_l">Location</b><span data-i18n="m_loc_v">Morges, Switzerland (next to Lausanne)</span></span>
+          <span><b data-i18n="m_avail_l">Availability</b><span data-i18n="m_avail_v">Full-time, 22 Jun – 16 Aug · away ~2 weeks in July</span></span>
+        </div>
+        <div class="chip-groups">
+          <div class="chip-group">
+            <span class="chip-label" data-i18n="edu_label">Education</span>
+            <span class="chip" data-i18n="edu1">IT Technician — CFC (in progress)</span>
+            <span class="chip" data-i18n="edu2">Bachelor in Theology</span>
+            <span class="chip" data-i18n="edu3">Bilingual Baccalaureate FR/DE — Biology &amp; Chemistry focus</span>
+          </div>
+        </div>
+        <div class="qa-head" data-i18n="qa_h">What you're looking for is how I already work.</div>
+        <div class="qa-acc">
+          <details class="qa"><summary data-i18n="fit1_t">Can you use AI to fix manual, slow workflows?</summary><div class="qa-a" data-i18n="fit1_m">Exactly what I enjoy — I already build automations with Claude Code and Python.</div></details>
+          <details class="qa"><summary data-i18n="fit2_t">Are you hands-on, organized and reliable?</summary><div class="qa-a" data-i18n="fit2_m">I keep things tidy and see tasks through to the end.</div></details>
+          <details class="qa"><summary data-i18n="fit3_t">Are you entrepreneurial and self-directed?</summary><div class="qa-a" data-i18n="fit3_m">I tend to notice problems early and take the initiative.</div></details>
+          <details class="qa"><summary data-i18n="fit4_t">Do you have a genuine interest in the life sciences?</summary><div class="qa-a" data-i18n="fit4_m">Genuine — my Maturité specialised in biology and chemistry, and giving AI agents hands in the real world excites me.</div></details>
+          <details class="qa"><summary data-i18n="fit5_t">Can you work on-site in Lausanne, starting soon?</summary><div class="qa-a" data-i18n="fit5_m">I live in Morges, next to Lausanne, and can start immediately.</div></details>
+          <details class="qa"><summary data-i18n="fit6_t">Are you comfortable juggling shifting priorities?</summary><div class="qa-a" data-i18n="fit6_m">Generalist by nature — I'm at ease when priorities change.</div></details>
+        </div>
+        <p class="madeby" data-i18n="madeby">This site is proof of concept: I built it end to end by directing AI. ✦</p>
+      </div>
+    </div>
+    <div class="hero-eyebrow-wrap" id="heroEyebrowWrap"><span class="eyebrow" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span></div>
+    <div class="scroll-cue" id="cue"><span data-i18n="scroll">Scroll the story</span><span class="dot"></span></div>
+  </div>
+</section>
+
+
+<script>
+const I18N = {
+  en:{
+    hero_eyebrow:"Application — Business Operations @ Adaptyv",
+    hero_lead:"27, fluent in five languages. A career-changer who moved into tech to build — I create practical tools with AI and like seeing things through. Self-directed and motivated.",
+    scroll:"Scroll the story",
+    c1_tag:"01 — Code & science", c1_h:"I love to code — and I'm drawn to the science.",
+    c1_body:"I'm in CFC informatique, and coding is what I enjoy most — I use AI (Claude Code, Python) to build real tools, not just to draft emails. I'm also genuinely interested in biology and chemistry; my Maturité specialised in both. Adaptyv is exactly that intersection.",
+    c2_tag:"02 — Availability", c2_h:"One honest note on my availability.",
+    c2_body:"I'm available full-time from 22 June to 16 August. The one exception: two weeks in July, when I'll be in Ukraine to propose to my girlfriend. I'd rather be upfront about it.",
+    c3_tag:"03 — Ready to start", c3_h:"Adaptable, motivated, ready now.",
+    c3_body:"I adapt quickly and bring real motivation. I live in Morges, right next to Lausanne, so I'm on-site ready — and I can start this week.",
+    qa_tag:"04 — Fit for the role", qa_h:"What you're looking for is how I already work.",
+    fit1_t:"Can you use AI to fix manual, slow workflows?", fit1_m:"Exactly what I enjoy — I already build automations with Claude Code and Python.",
+    fit2_t:"Are you hands-on, organized and reliable?", fit2_m:"I keep things tidy and see tasks through to the end.",
+    fit3_t:"Are you entrepreneurial and self-directed?", fit3_m:"I tend to notice problems early and take the initiative.",
+    fit4_t:"Do you have a genuine interest in the life sciences?", fit4_m:"Genuine — my Maturité specialised in biology and chemistry, and giving AI agents hands in the real world excites me.",
+    fit5_t:"Can you work on-site in Lausanne, starting soon?", fit5_m:"I live in Morges, next to Lausanne, and can start immediately.",
+    fit6_t:"Are you comfortable juggling shifting priorities?", fit6_m:"Generalist by nature — I'm at ease when priorities change.",
+    cta_eyebrow:"Let's work together", cta_h:"I'm the person you're looking for.",
+    cta_email:"Email me", cta_cv:"Download my CV (PDF)",
+    m_email_l:"Email", m_phone_l:"Phone", m_loc_l:"Location", m_loc_v:"Morges, Switzerland (next to Lausanne)",
+    m_avail_l:"Availability", m_avail_v:"Full-time, 22 Jun – 16 Aug · away ~2 weeks in July",
+    edu_label:"Education",
+    edu1:"IT Technician — CFC (in progress)", edu2:"Bachelor in Theology", edu3:"Bilingual Baccalaureate FR/DE — Biology & Chemistry focus",
+    madeby:"This site is proof of concept: I built it end to end by directing AI. ✦"
+  },
+  fr:{
+    hero_eyebrow:"Candidature — Business Operations @ Adaptyv",
+    hero_lead:"27 ans, cinq langues parlées couramment. Reconverti dans l'informatique par envie de créer — je construis des outils concrets avec l'IA et j'aime mener les choses à bien. Autonome et motivé.",
+    scroll:"Déroulez l'histoire",
+    c1_tag:"01 — Code & science", c1_h:"J'aime coder — et la science m'attire.",
+    c1_body:"Je suis en CFC informatique, et coder est ce qui me plaît le plus — j'utilise l'IA (Claude Code, Python) pour construire de vrais outils, pas seulement pour rédiger des emails. Je suis aussi sincèrement intéressé par la biologie et la chimie ; ma maturité était une OS bio-chimie. Adaptyv, c'est exactement cette intersection.",
+    c2_tag:"02 — Disponibilité", c2_h:"Une note honnête sur ma disponibilité.",
+    c2_body:"Je suis disponible à plein temps du 22 juin au 16 août. La seule exception : deux semaines en juillet, où je serai en Ukraine pour demander ma copine en fiançailles. Je préfère le dire d'emblée.",
+    c3_tag:"03 — Prêt à commencer", c3_h:"Adaptable, motivé, prêt maintenant.",
+    c3_body:"Je m'adapte vite et j'apporte une vraie motivation. J'habite à Morges, juste à côté de Lausanne — donc prêt sur site, et je peux commencer cette semaine.",
+    qa_tag:"04 — En phase avec le poste", qa_h:"Ce que vous cherchez, c'est déjà ma façon de travailler.",
+    fit1_t:"Sais-tu utiliser l'IA pour corriger des workflows manuels et lents ?", fit1_m:"Exactement ce que j'aime faire — je construis déjà des automatisations avec Claude Code et Python.",
+    fit2_t:"Es-tu concret, organisé et fiable ?", fit2_m:"Je garde tout en ordre et je vais au bout des choses.",
+    fit3_t:"Es-tu entrepreneurial et autonome ?", fit3_m:"J'ai tendance à repérer les problèmes tôt et à prendre l'initiative.",
+    fit4_t:"As-tu un intérêt sincère pour les sciences du vivant ?", fit4_m:"Sincère — ma maturité était en biologie-chimie, et donner des mains aux agents IA dans le monde réel m'enthousiasme.",
+    fit5_t:"Peux-tu travailler sur site à Lausanne, rapidement ?", fit5_m:"J'habite à Morges, à côté de Lausanne, et je peux commencer immédiatement.",
+    fit6_t:"Es-tu à l'aise pour jongler entre des priorités changeantes ?", fit6_m:"Généraliste de nature — à l'aise quand les priorités changent.",
+    cta_eyebrow:"Travaillons ensemble", cta_h:"Je suis la personne que vous cherchez.",
+    cta_email:"Écrivez-moi", cta_cv:"Télécharger mon CV (PDF)",
+    m_email_l:"Email", m_phone_l:"Téléphone", m_loc_l:"Lieu", m_loc_v:"Morges, Suisse (à côté de Lausanne)",
+    m_avail_l:"Disponibilité", m_avail_v:"Temps plein, 22 juin – 16 août · absent ~2 semaines en juillet",
+    edu_label:"Formation",
+    edu1:"Informaticien CFC (en cours)", edu2:"Bachelor en théologie", edu3:"Maturité bilingue FR/DE — OS biologie-chimie",
+    madeby:"Ce site en est la preuve : je l'ai réalisé de bout en bout en pilotant l'IA. ✦"
+  }
+};
+
+function setLang(lang){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(I18N[lang][k]!==undefined) el.textContent = I18N[lang][k];
+  });
+  document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  document.getElementById('btn-fr').classList.toggle('active',lang==='fr');
+  try{ localStorage.setItem('cvlang',lang); }catch(e){}
+}
+
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:.18});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const smooth=(e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
+
+const story = document.getElementById('s0');
+const storyVid = document.getElementById('storyVid');
+const heroVid = document.getElementById('heroVid');
+const herotext = document.getElementById('herotext');
+const heroEyebrow = document.getElementById('heroEyebrowWrap');
+const cue = document.getElementById('cue');
+const ctaFinal = document.getElementById('ctaFinal');
+const beats = [...document.querySelectorAll('.beat')];
+const stills = [...document.querySelectorAll('.still')];
+const progressBar = document.getElementById('progress');
+const dots = [...document.querySelectorAll('.dots a')];
+
+const HERO_END = 0.07;                 // hero fully gone by 7% of story scroll
+const D = 0.004;                       // pullback so a hold shows the END of its clip
+const e1=1/4, e2=2/4, e3=3/4;
+const PHASES = [
+  {t:'play', a:0,      b:e1-D},
+  {t:'hold', v:e1-D,   beat:0},
+  {t:'play', a:e1,     b:e2-D},
+  {t:'hold', v:e2-D,   beat:1},
+  {t:'play', a:e2,     b:e3-D},
+  {t:'hold', v:e3-D,   beat:2},
+  {t:'play', a:e3,     b:1-D},   // clip 4: transition that morphs into the office/footer frame
+  {t:'hold', v:1-D,    cta:true} // hold on the office frame: the footer fades in over it
+];
+const W = [1.3,1.1,1.3,1.1,1.3,1.1,1.4,1.7];
+const WS = W.reduce((a,b)=>a+b,0);
+let acc=0; const BOUNDS = W.map(w=>{ const s=acc/WS; acc+=w; return [s, acc/WS]; });
+const holdMid = [1,3,5,7].map(k=> (BOUNDS[k][0]+BOUNDS[k][1])/2 );  // scroll-progress centre of each pause / footer
+
+let ticking=false, heroPlaying=true;
+// smoothed scrubbing: scroll sets a target time, the video glides toward it
+let targetT=0, dispT=0, animOn=false;
+const EASE=0.1;            // lower = smoother/slower glide, higher = snappier
+function animate(){
+  const d=storyVid.duration;
+  let settled=true;
+  if(d && isFinite(d)){
+    dispT += (targetT - dispT) * EASE;
+    if(Math.abs(targetT - dispT) < 0.004) dispT = targetT; else settled=false;
+    const t = clamp(dispT, 0, d-0.04);
+    if(Math.abs(storyVid.currentTime - t) > 0.004){
+      if(typeof storyVid.fastSeek==='function') storyVid.fastSeek(t); else storyVid.currentTime = t;
+    }
+  }
+  if(settled){ animOn=false; } else { requestAnimationFrame(animate); }
+}
+function ensureAnim(){ if(!animOn){ animOn=true; requestAnimationFrame(animate); } }
+
+function render(){
+  ticking=false;
+  const y=window.scrollY, vh=window.innerHeight;
+  const top=story.offsetTop, len=story.offsetHeight - vh;
+  const P = len>0 ? clamp((y-top)/len,0,1) : 0;
+
+  // hero video loops at the top, then crossfades into the story (both show the suit, so it reads smooth)
+  const heroOp = 1 - smooth(0, HERO_END, P);
+  heroVid.style.opacity = heroOp.toFixed(3);
+  if(heroOp < 0.02 && heroPlaying){ heroVid.pause(); heroPlaying=false; }
+  else if(heroOp >= 0.02 && !heroPlaying){ heroVid.play().catch(()=>{}); heroPlaying=true; }
+  herotext.style.opacity = heroOp.toFixed(3);
+  herotext.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
+  herotext.classList.toggle('show', heroOp>0.45);
+  heroEyebrow.style.opacity = heroOp.toFixed(3);
+  heroEyebrow.style.pointerEvents = heroOp>0.5 ? 'auto' : 'none';
+  cue.style.opacity = heroOp.toFixed(3);
+
+  // scrub story timeline + beat opacities
+  let vidFrac=0; const op=[0,0,0]; let ctaOp=0;
+  for(let i=0;i<PHASES.length;i++){
+    const [ps,pe]=BOUNDS[i];
+    if(P>=ps && P<=pe+1e-6){
+      const lp = pe>ps ? clamp((P-ps)/(pe-ps),0,1) : 0;
+      const ph=PHASES[i];
+      if(ph.t==='play'){ vidFrac = ph.a + lp*(ph.b-ph.a); }
+      else if(ph.cta){ vidFrac = ph.v; ctaOp = clamp(lp<0.30 ? lp/0.30 : 1, 0, 1); }  // footer fades in, stays
+      else { vidFrac = ph.v; let o=1; if(lp<0.22)o=lp/0.22; else if(lp>0.80)o=(1-lp)/0.20; op[ph.beat]=clamp(o,0,1); }
+      break;
+    }
+  }
+  const d=storyVid.duration;
+  if(d && isFinite(d)){ targetT = clamp(vidFrac*d, 0, d-0.04); ensureAnim(); }
+  beats.forEach((el,i)=>{
+    const o = heroOp>0.5 ? 0 : op[i];
+    el.style.opacity = o.toFixed(3);
+    el.style.transform = `translateY(${(-50 + (1-o)*4).toFixed(2)}%)`;
+    el.style.pointerEvents = o>0.5 ? 'auto' : 'none';
+    el.classList.toggle('show', o>0.35);
+  });
+  // stills are identical to the clip's last frame, so snap them on/off (no cross-fade)
+  stills.forEach(im=>{ const b=+im.dataset.beat; im.style.opacity = op[b]>0.5 ? '1' : '0'; });
+  // footer overlay on the final office frame
+  ctaFinal.style.opacity = ctaOp.toFixed(3);
+  ctaFinal.style.pointerEvents = ctaOp>0.5 ? 'auto' : 'none';
+
+  // progress bar
+  const max = document.body.scrollHeight - vh;
+  progressBar.style.width = (max>0 ? (y/max*100) : 0) + '%';
+
+  // dots: 3 story beats + footer, driven by the video scroll
+  let active;
+  if(P >= BOUNDS[6][0]) active = 3;                       // clip 4 transition + footer
+  else active = P<=BOUNDS[1][1] ? 0 : (P<=BOUNDS[3][1] ? 1 : 2);
+  dots.forEach((dd,i)=>dd.classList.toggle('active', i===active));
+}
+function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(render); } }
+window.addEventListener('scroll', onScroll, {passive:true});
+window.addEventListener('resize', render);
+
+dots.forEach(dd=>dd.addEventListener('click',()=>{
+  const g = dd.getAttribute('data-go');
+  const i = (g==='contact' || g==='3') ? 3 : +g;
+  const len = story.offsetHeight - window.innerHeight;
+  window.scrollTo({top: story.offsetTop + holdMid[i]*len, behavior:'smooth'});
+}));
+
+// prime the scrubbed video so seeked frames actually paint
+function primeVideo(v){
+  const pr = v.play();
+  if(pr && pr.then) pr.then(()=>{ v.pause(); render(); }).catch(()=>{ v.pause(); });
+  else { v.pause(); render(); }
+}
+storyVid.muted = true;
+storyVid.addEventListener('loadedmetadata', ()=>{
+  if(storyVid.duration===Infinity || isNaN(storyVid.duration)){
+    storyVid.currentTime = 1e6;
+    storyVid.addEventListener('timeupdate', function once(){ storyVid.removeEventListener('timeupdate', once); storyVid.currentTime=0; render(); });
+  } else render();
+});
+storyVid.addEventListener('loadeddata', ()=>primeVideo(storyVid));
+let _primed=false;
+function primeAll(){ if(_primed)return; _primed=true; try{storyVid.load();}catch(e){} primeVideo(storyVid); render(); }
+['wheel','touchstart','pointerdown','keydown','scroll'].forEach(ev=>window.addEventListener(ev, primeAll, {once:true, passive:true}));
+
+let start='en';
+try{ start = localStorage.getItem('cvlang') || 'en'; }catch(e){}
+setLang(start);
+render();
+</script>
+</body>
+</html>
