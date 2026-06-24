@@ -18,7 +18,7 @@
   html{scroll-behavior:smooth}
   body{background:var(--ink);color:var(--cream);font-family:var(--body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-  .story{position:relative;height:980vh;width:100%}
+  .story{position:relative;height:605vh;width:100%}
   .stage{position:sticky;top:0;height:100vh;width:100%;display:flex;align-items:center;overflow:hidden}
 
   .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
@@ -31,11 +31,12 @@
   .layers{position:relative;z-index:3;width:min(1100px,90vw);margin:0 auto}
   .beat,.hbeat{position:absolute;top:50%;left:0;width:100%;transform:translateY(-50%);opacity:0;will-change:opacity,transform}
   /* hero text centered, anchored low so it clears the face */
-  #herotext{text-align:center;top:auto;bottom:9vh;transform:none}
-  #herotext h1{font-size:clamp(38px,6vw,92px)}
-  #herotext .eyebrow{margin-bottom:16px}
-  #herotext .lead{margin-left:auto;margin-right:auto}
-  #herotext .chips{justify-content:center;margin-left:auto;margin-right:auto}
+  #herotext{position:absolute;left:50%;right:auto;top:auto;bottom:12vh;width:min(1100px,90vw);transform:translateX(-50%);text-align:center;z-index:3}
+  #herotext h1{font-size:clamp(34px,5.4vw,80px)}
+  #herotext .eyebrow{margin-bottom:8px}
+  #herotext .hero-name{margin-top:10px}
+  #herotext .lead{margin-left:auto;margin-right:auto;margin-top:14px;font-size:clamp(15px,1.7vw,20px);max-width:44ch}
+  #herotext .chips{justify-content:center;margin-left:auto;margin-right:auto;margin-top:12px}
   .hero-eyebrow-wrap{position:absolute;left:0;right:0;bottom:16vh;z-index:3;width:min(1100px,90vw);margin:0 auto;text-align:center;will-change:opacity}
 
   .beat > *, .hbeat > *{transition:transform .7s cubic-bezier(.2,.75,.2,1), filter .7s ease;transform:translateY(26px);filter:blur(6px)}
@@ -66,10 +67,10 @@
   .chip-label{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--lime);margin-right:6px;min-width:96px}
 
-  .scroll-cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:4;font-family:var(--display);
-    font-weight:500;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-    display:flex;flex-direction:column;align-items:center;gap:8px;will-change:opacity}
-  .scroll-cue .dot{width:2px;height:34px;background:linear-gradient(var(--cream),transparent);animation:drop 1.6s infinite}
+  .scroll-cue{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:4;font-family:var(--display);
+    font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:flex;flex-direction:column;align-items:center;gap:6px;will-change:opacity}
+  .scroll-cue .dot{width:2px;height:20px;background:linear-gradient(var(--cream),transparent);animation:drop 1.6s infinite}
   @keyframes drop{0%{opacity:0;transform:translateY(-10px)}40%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
 
   .lang{position:fixed;top:22px;right:22px;z-index:50;display:flex;background:rgba(10,10,12,.55);
@@ -84,12 +85,12 @@
 
   .progress{position:fixed;top:0;left:0;height:4px;background:var(--green);z-index:60;width:0;box-shadow:0 0 12px rgba(31,223,107,.6)}
 
-  /* 04 — conclusion overlay, with its own office image (so it adapts on mobile) */
+  /* 04 — conclusion: clean still (conclusion.jpg) + centered text, same still mechanism as beats 02/03 */
+  .scrim2{position:absolute;inset:0;z-index:2;opacity:0;will-change:opacity;pointer-events:none;
+    background:linear-gradient(0deg, rgba(8,8,10,.94) 0%, rgba(8,8,10,.7) 38%, rgba(8,8,10,.42) 70%, rgba(8,8,10,.3) 100%)}
   .cta-final{position:absolute;inset:0;z-index:5;opacity:0;overflow-y:auto;will-change:opacity}
-  .cta-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% center;z-index:0}
-  .cta-final::before{content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(90deg, rgba(8,8,10,.92) 0%, rgba(8,8,10,.62) 46%, rgba(8,8,10,.22) 100%)}
   .cta-inner{position:relative;z-index:2;width:min(1100px,90vw);margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:13vh 0 9vh}
+  .cta-inner h2{text-shadow:0 2px 24px rgba(0,0,0,.6)}
   .contact-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
   .btn{font-family:var(--display);font-weight:700;font-size:clamp(15px,1.6vw,18px);text-decoration:none;padding:16px 26px;
     border-radius:14px;display:inline-flex;align-items:center;gap:10px;transition:.25s}
@@ -117,14 +118,13 @@
 
   @media (max-width:640px){
     .dots{display:none}
-    .story{height:820vh}
+    .story{height:500vh}
     .scrim{background:linear-gradient(0deg, rgba(8,8,10,.9) 0%, rgba(8,8,10,.45) 80%)}
     .lead{max-width:92vw}
-    #herotext h1{font-size:clamp(36px,11vw,60px)}
-    #herotext{top:auto;bottom:7vh;transform:none}
-    /* mobile conclusion: keep you in frame, text fully readable */
-    .cta-bg{object-position:70% center}
-    .cta-final::before{background:linear-gradient(0deg, rgba(8,8,10,.95) 0%, rgba(8,8,10,.9) 55%, rgba(8,8,10,.8) 100%)}
+    #herotext h1{font-size:clamp(30px,9.5vw,52px)}
+    #herotext{bottom:9vh;width:92vw}
+    /* mobile conclusion: stronger bottom-up scrim, text fully readable */
+    .scrim2{background:linear-gradient(0deg, rgba(8,8,10,.96) 0%, rgba(8,8,10,.9) 50%, rgba(8,8,10,.78) 100%)}
     .cta-inner{padding:84px 0 64px}
     .contact-row .btn{flex:1 1 100%;justify-content:center;font-size:15px;padding:14px 16px}
     .meta{grid-template-columns:1fr;font-size:14px}
@@ -151,21 +151,24 @@
 
 <section class="story" id="s0">
   <div class="stage">
-    <video class="bg" id="storyVid" muted playsinline preload="auto" poster="images/1.jpg"></video>
+    <canvas class="bg" id="storyCanvas" width="1600" height="896"></canvas>
     <video class="bg herovid" id="heroVid" src="images/hero.mp4" autoplay muted loop playsinline poster="images/1.jpg"></video>
     <img class="bg still" data-beat="0" src="images/2.jpg" alt="" />
     <img class="bg still" data-beat="1" src="images/3.jpg" alt="" />
     <img class="bg still" data-beat="2" src="images/4.jpg" alt="" />
+    <img class="bg still" data-beat="3" src="images/conclusion.jpg" alt="" />
     <div class="scrim"></div>
-    <div class="layers">
-      <div class="hbeat" id="herotext">
-        <span class="eyebrow" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span>
-        <h1>Ruben<br><span class="stroke">ten Cate</span></h1>
-        <p class="lead" data-i18n="hero_lead">27, fluent in five languages. A career-changer who moved into tech to build.</p>
-        <div class="chips">
-          <span class="chip">Français</span><span class="chip">English</span><span class="chip">Nederlands</span><span class="chip">Deutsch</span><span class="chip">Español</span>
-        </div>
+    <div class="scrim2" id="scrim2"></div>
+    <div class="hbeat" id="herotext">
+      <span class="eyebrow" data-i18n="hero_eyebrow">Application — Business Operations @ Adaptyv</span>
+      <h1 class="hero-name">Ruben<br><span class="stroke">ten Cate</span></h1>
+      <p class="lead" data-i18n="hero_lead">27, fluent in five languages. A career-changer who moved into tech. Self-directed and motivated.</p>
+      <div class="chips">
+        <span class="chip">Français</span><span class="chip">English</span><span class="chip">Nederlands</span><span class="chip">Deutsch</span><span class="chip">Español</span>
       </div>
+    </div>
+
+    <div class="layers">
       <div class="beat" data-beat="0">
         <div class="chapter-tag" data-i18n="c1_tag">01 — Code &amp; science</div>
         <h2 data-i18n="c1_h">I love to code — and I'm drawn to the science.</h2>
@@ -189,7 +192,6 @@
 
     <!-- 04 — CONCLUSION on the final office frame -->
     <div class="cta-final" id="ctaFinal">
-      <img class="cta-bg" src="images/footer.jpg" alt="" />
       <div class="cta-inner">
         <div class="chapter-tag" data-i18n="cta_tag">04 — In conclusion</div>
         <h2 data-i18n="cta_h">I'm the person you're looking for.</h2>
@@ -234,7 +236,7 @@
 const I18N = {
   en:{
     hero_eyebrow:"Application — Business Operations @ Adaptyv",
-    hero_lead:"27, fluent in five languages. A career-changer who moved into tech to build — I create practical tools with AI and like seeing things through. Self-directed and motivated.",
+    hero_lead:"27, fluent in five languages. A career-changer who moved into tech. Self-directed and motivated.",
     scroll:"Scroll the story",
     c1_tag:"01 — Code & science", c1_h:"I love to code — and I'm drawn to the science.",
     c1_body:"I'm in CFC informatique, and coding is what I enjoy most — I use AI (Claude Code, Python) to build real tools, not just to draft emails. I'm also genuinely interested in biology and chemistry; my Maturité specialised in both. Adaptyv is exactly that intersection.",
@@ -260,7 +262,7 @@ const I18N = {
   },
   fr:{
     hero_eyebrow:"Candidature — Business Operations @ Adaptyv",
-    hero_lead:"27 ans, cinq langues parlées couramment. Reconverti dans l'informatique par envie de créer — je construis des outils concrets avec l'IA et j'aime mener les choses à bien. Autonome et motivé.",
+    hero_lead:"27 ans, cinq langues parlées couramment. Reconverti dans l'informatique. Autonome et motivé.",
     scroll:"Déroulez l'histoire",
     c1_tag:"01 — Code & science", c1_h:"J'aime coder — et la science m'attire.",
     c1_body:"Je suis en CFC informatique, et coder est ce qui me plaît le plus — j'utilise l'IA (Claude Code, Python) pour construire de vrais outils, pas seulement pour rédiger des emails. Je suis aussi sincèrement intéressé par la biologie et la chimie ; ma maturité était une OS bio-chimie. Adaptyv, c'est exactement cette intersection.",
@@ -301,15 +303,41 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth=(e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 
 const story = document.getElementById('s0');
-const storyVid = document.getElementById('storyVid');
+const canvas = document.getElementById('storyCanvas');
+const ctx = canvas.getContext('2d', {alpha:false});
 const heroVid = document.getElementById('heroVid');
 const herotext = document.getElementById('herotext');
 const cue = document.getElementById('cue');
 const ctaFinal = document.getElementById('ctaFinal');
+const scrim2 = document.getElementById('scrim2');
 const beats = [...document.querySelectorAll('.beat')];
 const stills = [...document.querySelectorAll('.still')];
 const progressBar = document.getElementById('progress');
 const dots = [...document.querySelectorAll('.dots a')];
+
+/* ---- frame sequence (canvas scrub: smooth + sharp, no video seeking) ---- */
+const N = 146;
+const CW = canvas.width, CH = canvas.height;
+const frames = new Array(N);
+let ready = false, loaded = 0, lastDrawn = -1;
+function ok(im){ return im && im.complete && im.naturalWidth>0; }
+function drawFrame(idx){
+  idx = clamp(idx|0, 0, N-1);
+  if(idx===lastDrawn) return;
+  if(ok(frames[idx])){ ctx.drawImage(frames[idx],0,0,CW,CH); lastDrawn=idx; return; }
+  for(let d=1; d<N; d++){            // nearest already-loaded frame while the rest stream in
+    const a=idx-d, b=idx+d;
+    if(a>=0 && ok(frames[a])){ ctx.drawImage(frames[a],0,0,CW,CH); lastDrawn=a; return; }
+    if(b<N && ok(frames[b])){ ctx.drawImage(frames[b],0,0,CW,CH); lastDrawn=b; return; }
+  }
+}
+for(let i=0;i<N;i++){
+  const im = new Image();
+  im.decoding = 'async';
+  im.onload = ()=>{ loaded++; if(i===0){ ready=true; drawFrame(0); } if(loaded%24===0 || loaded===N) render(); };
+  im.src = 'images/seq/f' + String(i+1).padStart(3,'0') + '.webp';
+  frames[i] = im;
+}
 
 const HERO_END = 0.06;
 const D = 0.004;
@@ -322,28 +350,26 @@ const PHASES = [
   {t:'play', a:e2,   b:e3-D},
   {t:'hold', v:e3-D, beat:2},
   {t:'play', a:e3,   b:1-D},
-  {t:'hold', v:1-D,  cta:true}
+  {t:'hold', v:1-D,  beat:3}
 ];
-const W = [1.3,1.1,1.3,1.1,1.3,1.1,1.0,1.7];
+const W = [1.3,2.0,1.3,2.0,1.3,2.0,1.0,1.0];
 const WS = W.reduce((a,b)=>a+b,0);
 let acc=0; const BOUNDS = W.map(w=>{ const s=acc/WS; acc+=w; return [s, acc/WS]; });
 const holdMid = [1,3,5,7].map(k=> (BOUNDS[k][0]+BOUNDS[k][1])/2 );
 
-let ticking=false, heroPlaying=true;
-let targetT=0, dispT=0, animOn=false;
-const EASE=0.12;
+/* ---- eased frame scrub ---- */
+let targetFrac=0, dispFrac=0, animOn=false;
+const EASE=0.18;
 function animate(){
-  const d=storyVid.duration; let settled=true;
-  if(d && isFinite(d)){
-    dispT += (targetT - dispT) * EASE;
-    if(Math.abs(targetT - dispT) < 0.004) dispT = targetT; else settled=false;
-    const t = clamp(dispT, 0, d-0.04);
-    if(Math.abs(storyVid.currentTime - t) > 0.004){ if(typeof storyVid.fastSeek==='function') storyVid.fastSeek(t); else storyVid.currentTime = t; }
-  }
+  let settled=true;
+  dispFrac += (targetFrac - dispFrac) * EASE;
+  if(Math.abs(targetFrac - dispFrac) < 0.0008) dispFrac = targetFrac; else settled=false;
+  drawFrame(Math.round(dispFrac*(N-1)));
   if(settled){ animOn=false; } else { requestAnimationFrame(animate); }
 }
 function ensureAnim(){ if(!animOn){ animOn=true; requestAnimationFrame(animate); } }
 
+let ticking=false, heroPlaying=true;
 function render(){
   ticking=false;
   const y=window.scrollY, vh=window.innerHeight;
@@ -361,20 +387,24 @@ function render(){
   herotext.classList.toggle('show', heroOp>0.45);
   cue.style.opacity = heroOp.toFixed(3);
 
-  let vidFrac=0; const op=[0,0,0]; let ctaOp=0;
+  let vidFrac=0; const op=[0,0,0,0];
   for(let i=0;i<PHASES.length;i++){
     const [ps,pe]=BOUNDS[i];
     if(Pp>=ps && Pp<=pe+1e-6){
       const lp = pe>ps ? clamp((Pp-ps)/(pe-ps),0,1) : 0;
       const ph=PHASES[i];
       if(ph.t==='play'){ vidFrac = ph.a + lp*(ph.b-ph.a); }
-      else if(ph.cta){ vidFrac = ph.v; ctaOp = clamp(lp<0.30 ? lp/0.30 : 1, 0, 1); }
-      else { vidFrac = ph.v; let o=1; if(lp<0.22)o=lp/0.22; else if(lp>0.80)o=(1-lp)/0.20; op[ph.beat]=clamp(o,0,1); }
+      else {
+        vidFrac = ph.v; let o=1;
+        if(ph.beat===3){ o = clamp(lp/0.7, 0, 1); }                    // conclusion: fade in across the phase (little dead scroll)
+        else { if(lp<0.22)o=lp/0.22; else if(lp>0.80)o=(1-lp)/0.20; }
+        op[ph.beat]=clamp(o,0,1);
+      }
       break;
     }
   }
-  const d=storyVid.duration;
-  if(ready && d && isFinite(d)){ targetT = clamp(vidFrac*d, 0, d-0.04); ensureAnim(); }
+  if(ready){ targetFrac = clamp(vidFrac,0,1); ensureAnim(); }
+
   beats.forEach((el,i)=>{
     const o = heroVisible ? 0 : op[i];
     el.style.opacity = o.toFixed(3);
@@ -383,8 +413,10 @@ function render(){
     el.classList.toggle('show', o>0.35);
   });
   stills.forEach(im=>{ const b=+im.dataset.beat; im.style.opacity = (!heroVisible && op[b]>0.5) ? '1' : '0'; });
-  ctaFinal.style.opacity = ctaOp.toFixed(3);
-  ctaFinal.style.pointerEvents = ctaOp>0.5 ? 'auto' : 'none';
+  const cOp = heroVisible ? 0 : op[3];
+  scrim2.style.opacity = cOp.toFixed(3);
+  ctaFinal.style.opacity = cOp.toFixed(3);
+  ctaFinal.style.pointerEvents = cOp>0.5 ? 'auto' : 'none';
 
   const max = document.body.scrollHeight - vh;
   progressBar.style.width = (max>0 ? (y/max*100) : 0) + '%';
@@ -404,30 +436,6 @@ dots.forEach(dd=>dd.addEventListener('click',()=>{
   const pp = HERO_END + holdMid[i]*(1-HERO_END);
   window.scrollTo({top: story.offsetTop + pp*len, behavior:'smooth'});
 }));
-
-// silent fast preload (no loading page): fetch the small video once, then scrub from a blob
-let ready=false, loaderDone=false;
-function primeVideo(v){ const pr=v.play(); if(pr&&pr.then) pr.then(()=>{v.pause();render();}).catch(()=>{v.pause();}); else {v.pause();render();} }
-function finishLoad(){ if(loaderDone) return; loaderDone=true; ready=true; primeVideo(storyVid); render(); }
-storyVid.muted = true;
-fetch('story.mp4').then(resp=>{
-  if(!resp.ok || !resp.body) throw new Error('no stream');
-  const reader = resp.body.getReader(); const chunks=[];
-  return (function pump(){
-    return reader.read().then(({done,value})=>{
-      if(done){ storyVid.src=URL.createObjectURL(new Blob(chunks,{type:'video/mp4'})); storyVid.load(); finishLoad(); return; }
-      chunks.push(value); return pump();
-    });
-  })();
-}).catch(()=>{
-  storyVid.src='story.mp4'; storyVid.preload='auto'; try{ storyVid.load(); }catch(e){}
-  function bufEnd(){ try{const b=storyVid.buffered; return b.length?b.end(b.length-1):0;}catch(e){return 0;} }
-  function checkBuffer(){ const d=storyVid.duration; if(d&&isFinite(d) && bufEnd()>=d-0.4) finishLoad(); }
-  storyVid.addEventListener('progress', checkBuffer);
-  storyVid.addEventListener('canplaythrough', checkBuffer);
-  const t=setInterval(()=>{ if(loaderDone){clearInterval(t);return;} checkBuffer(); }, 400);
-});
-setTimeout(()=>{ if(!loaderDone){ if(!storyVid.getAttribute('src')) storyVid.src='story.mp4'; finishLoad(); } }, 20000);
 
 let start='en';
 try{ start = localStorage.getItem('cvlang') || 'en'; }catch(e){}
